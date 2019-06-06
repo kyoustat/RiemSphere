@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1558470369279.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1568870357",
+    "id" : "41FD4A02",
+    "lastKnownWriteTime" : 1559009168,
+    "last_content_update" : 1559009168879,
+    "path" : "~/Desktop/RiemSphere/R/dist_spnorm.R",
+    "project_path" : "R/dist_spnorm.R",
+    "properties" : {
+        "cursorPosition" : "73,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

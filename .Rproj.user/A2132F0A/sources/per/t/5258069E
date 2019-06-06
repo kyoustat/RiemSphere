@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1558469119817.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2038676717",
+    "id" : "5258069E",
+    "lastKnownWriteTime" : 1558898290,
+    "last_content_update" : 1558898290840,
+    "path" : "~/Desktop/RiemSphere/R/package-RiemSphere.R",
+    "project_path" : "R/package-RiemSphere.R",
+    "properties" : {
+        "cursorPosition" : "8,20",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

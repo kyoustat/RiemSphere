@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1559008627234.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3733797720",
+    "id" : "48EA80E2",
+    "lastKnownWriteTime" : 1559009641,
+    "last_content_update" : 1559009641654,
+    "path" : "~/Desktop/RiemSphere/R/dist_vmf.R",
+    "project_path" : "R/dist_vmf.R",
+    "properties" : {
+        "cursorPosition" : "64,14",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
