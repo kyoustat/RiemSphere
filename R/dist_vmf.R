@@ -25,6 +25,8 @@ dvmf <- function(x, mu, kappa=1, log = FALSE){
   p = length(mu)
   # 2. lambda 
   check_num_nonneg(kappa)
+  # 3. x data
+  check_datamat(x)
   
   ## EVALUATION
   #   1. normalizing term
@@ -42,24 +44,6 @@ dvmf <- function(x, mu, kappa=1, log = FALSE){
     return(output*nterm)
   }
 }
-# 
-# # compare with vmf.density
-# niter = 12345
-# val1 = rep(0,niter)
-# val2 = rep(0,niter)
-# mydat = array(0,c(niter,3))
-# mymu = rnorm(3)
-# mymu = mymu/sqrt(sum(mymu^2))
-# mykappa = abs(rnorm(1))
-# for (i in 1:niter){
-#   y = rnorm(3)
-#   y = y/sqrt(sum(y^2))
-#   mydat[i,] = y
-#   val1[i] = vmf.density(y, mykappa, mymu)
-#   val2[i] = dvmf(y, mymu, mykappa)
-# }
-# val3 = dvmf(mydat, mymu, mykappa)
-
 
 #   -----------------------------------------------------------------------
 #' @rdname vmf

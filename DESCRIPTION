@@ -8,7 +8,7 @@ Maintainer: Who to complain to <yourfaultd@somewhere.net>
 Description: More about what it doesas
 License: GPL (>=3)
 Encoding: UTF-8
-Imports: Rcpp, Rfast, Rdpack, RiemBase, utils
+Imports: Rcpp, Rfast, Rdpack, RiemBase, DEoptim, utils, stats
 LinkingTo: Rcpp, RcppArmadillo, RiemBase
 RoxygenNote: 6.1.1
 RdMacros: Rdpack

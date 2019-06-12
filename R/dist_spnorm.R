@@ -25,6 +25,8 @@ dspnorm <- function(x, mu, lambda=1, log = FALSE){
   p = length(mu)
   # 2. lambda 
   check_num_nonneg(lambda)
+  # 3. check data
+  check_datamat(x)
   
   ## EVALUATION
   #   1. normalizing constant
@@ -85,7 +87,7 @@ rspnorm <- function(n, mu, lambda=1){
     #   1. tangent vectors
     vectors = array(0,c(n,D))
     for (i in 1:n){
-      vectors[i,] = rspnorm.single(lambda, D)
+      vectors[i,] = rspnorm.single(mu, lambda, D)
     }
     #   2. exponential mapping
     output = array(0,c(n,D))
@@ -106,11 +108,13 @@ rspnorm <- function(n, mu, lambda=1){
 # . -----------------------------------------------------------------------
 #' @keywords internal
 #' @noRd
-rspnorm.single <- function(lambda, D){
-  status = TRUE
-  sqrts  = sqrt(1/(lambda + ((D-2)/pi)))
-  while (status==TRUE){
+rspnorm.single <- function(mu, lambda, D){
+  status = FALSE
+  sqrts  = sqrt(1/(lambda + ((D-2)/pi))) # from the box : This is the correct one.
+  #sqrts  = sqrt((lambda + ((D-2)/pi)))  # from the text
+  while (status==FALSE){
     v = stats::rnorm(D,mean = 0, sd=sqrts)
+    v = v-mu*sum(mu*v)       ## this part is something missed from the paper.
     v.norm = sqrt(sum(v^2))
     if (v.norm <= pi){
       if (v.norm <= sqrt(.Machine$double.eps)){
@@ -119,11 +123,11 @@ rspnorm.single <- function(lambda, D){
         r1 = exp(-(lambda/2)*(v.norm^2))*((sin(v.norm)/v.norm)^(D-2))
       }
       r2 = exp(-((v.norm^2)/2)*(lambda+((D-2)/pi)))
-    }
-    r = r1/r2
-    u = stats::runif(1)
-    if (u <= r){
-      status = FALSE
+      r  = r1/r2
+      u  = stats::runif(1)
+      if (u <= r){
+        status = TRUE
+      }
     }
   }
   return(v)
