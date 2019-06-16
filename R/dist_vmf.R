@@ -59,7 +59,58 @@ rvmf <- function(n, mu, kappa=1){
   # 2. lambda 
   check_num_nonneg(kappa)
   
-  ## MAIN : use Rfast package
-  output = Rfast::rvmf(n, mu, kappa)
+  ## MAIN : use the ported version
+  output = rvmf_port(n, mu, kappa)
   return(output)
+}
+
+
+#' @keywords internal
+#' @noRd
+rvmf_port <- function(n, mu, k){
+  rotation <- function(a, b) {
+    p <- length(a)
+    ab <- sum(a * b)
+    ca <- a - b * ab
+    ca <- ca/sqrt(sum(ca^2))
+    A <- b %*% t(ca)
+    A <- A - t(A)
+    theta <- acos(ab)
+    diag(p) + sin(theta) * A + (cos(theta) - 1) * (b %*% 
+                                                     t(b) + ca %*% t(ca))
+  }
+  d <- length(mu)
+  if (k > 0) {
+    mu <- mu/sqrt(sum(mu^2))
+    ini <- c(numeric(d - 1), 1)
+    d1 <- d - 1
+    v1 <- matrix(rnorm(n*d1), nrow=n)
+    v <- v1 / sqrt( base::rowSums(v1^2) )
+    b <- (-2 * k + sqrt(4 * k^2 + d1^2))/d1
+    x0 <- (1 - b)/(1 + b)
+    m <- 0.5 * d1
+    ca <- k * x0 + (d - 1) * log(1 - x0^2)
+    w <- rvmf_h(n,ca,d1,x0,m,k,b) # directly
+    S <- cbind(sqrt(1 - w^2) * v, w)
+    if (sqrt(sum((ini-mu)^2)) < 100*.Machine$double.eps){
+      A = diag(length(ini))
+    } else {
+      A <- rotation(ini, mu)  
+    }
+    x <- tcrossprod(S, A)
+  }
+  else {
+    x = rvmf_uniform(n, mu)
+  }
+  return(x)
+}
+
+
+#' @keywords internal
+#' @noRd
+rvmf_uniform <- function(n, mu, k=0){
+  d = length(mu)
+  x1 = matrix(rnorm(n*d),nrow=n)
+  x  = x1/sqrt(base::rowSums(x1^2))
+  return(x)
 }

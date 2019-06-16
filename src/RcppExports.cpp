@@ -6,6 +6,23 @@
 
 using namespace Rcpp;
 
+// rvmf_h
+NumericVector rvmf_h(double n, double ca, double d1, double x0, double m, double k, double b);
+RcppExport SEXP _RiemSphere_rvmf_h(SEXP nSEXP, SEXP caSEXP, SEXP d1SEXP, SEXP x0SEXP, SEXP mSEXP, SEXP kSEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type ca(caSEXP);
+    Rcpp::traits::input_parameter< double >::type d1(d1SEXP);
+    Rcpp::traits::input_parameter< double >::type x0(x0SEXP);
+    Rcpp::traits::input_parameter< double >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type k(kSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(rvmf_h(n, ca, d1, x0, m, k, b));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpparma_hello_world
 arma::mat rcpparma_hello_world();
 RcppExport SEXP _RiemSphere_rcpparma_hello_world() {
@@ -51,6 +68,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RiemSphere_rvmf_h", (DL_FUNC) &_RiemSphere_rvmf_h, 7},
     {"_RiemSphere_rcpparma_hello_world", (DL_FUNC) &_RiemSphere_rcpparma_hello_world, 0},
     {"_RiemSphere_rcpparma_outerproduct", (DL_FUNC) &_RiemSphere_rcpparma_outerproduct, 1},
     {"_RiemSphere_rcpparma_innerproduct", (DL_FUNC) &_RiemSphere_rcpparma_innerproduct, 1},

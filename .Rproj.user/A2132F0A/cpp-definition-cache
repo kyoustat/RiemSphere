@@ -2,6 +2,21 @@
     {
         "definitions" : [
             {
+                "column" : 15,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_rvmf.cpp",
+                "kind" : 6,
+                "line" : 9,
+                "name" : "rvmf_h(double, double, double, double, double, double, double)",
+                "parent_name" : "",
+                "usr" : "c:@F@rvmf_h#d#d#d#d#d#d#d#"
+            }
+        ],
+        "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_rvmf.cpp",
+        "file_last_write" : 1560646768
+    },
+    {
+        "definitions" : [
+            {
                 "column" : 11,
                 "file" : "/home/kisung/Desktop/RiemSphere/src/rcpparma_hello_world.cpp",
                 "kind" : 6,

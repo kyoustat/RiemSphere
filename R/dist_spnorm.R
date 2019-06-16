@@ -82,7 +82,7 @@ rspnorm <- function(n, mu, lambda=1){
   
   ## ITERATE or RANDOM
   if (lambda==0){
-    output = Rfast::rvmf(n,mu,0)
+    output = rvmf_uniform(n,mu,k=0)
   } else {
     #   1. tangent vectors
     vectors = array(0,c(n,D))

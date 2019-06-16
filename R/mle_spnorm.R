@@ -125,9 +125,16 @@ lambda_method3 <- function(data, mean){
   }
   
   # 4. run Newton's iteration
+  # 4-1. try several inputs and rough start over a grid
+  candidates = sort(stats::runif(10, min=0, max=12345))
+  canvals    = apply(matrix(candidates), 1, opt.fun)
+  xold       = candidates[which.max(canvals)]
+  # xold = 1
+  
+  # 4-2. run iterations
   maxiter = 1000
-  xold = 1
   for (i in 1:maxiter){
+    # print(paste("iteration for Newton : ",i," initiated..", sep=""))
     h = min(abs(xold)/2, 1e-4)
     g.right = opt.fun(xold+h)
     g.mid   = opt.fun(xold)
@@ -150,11 +157,11 @@ lambda_method3 <- function(data, mean){
 
 
   
-# 
+# # 
 # # TESTER FOR MLE ESTIMATION -----------------------------------------------
 # myp   = 5
-# mylbd = stats::runif(1, min=0.0001, max=18)
-# myn   = 500
+# mylbd = stats::runif(1, min=0.0001, max=15)
+# myn   = 2000
 # 
 # aux_log <- function(mu, x){
 #   theta = base::acos(sum(x*mu))
@@ -193,6 +200,8 @@ lambda_method3 <- function(data, mean){
 # D = ncol(myx)
 # n = nrow(myx)
 # 
+# 
+# # test 1. shape of log-likelihood function --------------------------------
 # vec.lambda = seq(from=0,to=20,length.out=200)
 # vec.cost   = rep(0,length(vec.lambda))
 # for (i in 1:length(vec.lambda)){
@@ -210,7 +219,8 @@ lambda_method3 <- function(data, mean){
 # abline(v=mylbd, lwd=2, col="blue")
 # 
 # 
-# # time comparison for three methods ---------------------------------------
+# # test 2. time comparison for concentration estimation algorithms ---------
+# x11()
 # library(ggplot2)
 # library(microbenchmark)  # time comparison of multiple methods
 # lbdtime <- microbenchmark(
@@ -219,3 +229,26 @@ lambda_method3 <- function(data, mean){
 #   newtons = mle.spnorm(myx, method=3), times=20L
 # )
 # autoplot(lbdtime)
+# 
+# 
+# # test 3. estimation over iterations --------------------------------------
+# rec.dir <- rep(0,myn-1)
+# rec.lbd <- rep(0,myn-1)
+# for (i in 1:(myn-1)){
+#   tgtmle = mle.spnorm(myx[1:(i+1),])
+#   tgt.mean = tgtmle$mu
+#   tgt.lbd  = tgtmle$lambda
+# 
+#   rec.dir[i] = sqrt(sum((mymu-tgt.mean)^2))
+#   rec.lbd[i] = tgt.lbd
+#   print(paste("iteration ",i," complete..",sep=""))
+# }
+# 
+# selectid = round(seq(from=2,to=myn,length.out=100))-1
+# xid      = 2:myn
+# x11()
+# par(mfrow=c(1,2))
+# plot(xid[selectid], rec.dir[selectid], "b", cex=0.5, main="evolution : mean direction")
+# abline(h=0, col="blue", lwd=2)
+# plot(xid[selectid], rec.lbd[selectid], "b", cex=0.5, main="evolution : concentration")
+# abline(h=mylbd, col="red", lwd=1.5)
