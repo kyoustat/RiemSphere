@@ -68,17 +68,6 @@ rvmf <- function(n, mu, kappa=1){
 #' @keywords internal
 #' @noRd
 rvmf_port <- function(n, mu, k){
-  rotation <- function(a, b) {
-    p <- length(a)
-    ab <- sum(a * b)
-    ca <- a - b * ab
-    ca <- ca/sqrt(sum(ca^2))
-    A <- b %*% t(ca)
-    A <- A - t(A)
-    theta <- acos(ab)
-    diag(p) + sin(theta) * A + (cos(theta) - 1) * (b %*% 
-                                                     t(b) + ca %*% t(ca))
-  }
   d <- length(mu)
   if (k > 0) {
     mu <- mu/sqrt(sum(mu^2))
@@ -90,12 +79,12 @@ rvmf_port <- function(n, mu, k){
     x0 <- (1 - b)/(1 + b)
     m <- 0.5 * d1
     ca <- k * x0 + (d - 1) * log(1 - x0^2)
-    w <- rvmf_h(n,ca,d1,x0,m,k,b) # directly
+    w <- rvmf_h(n,ca,d1,x0,m,k,b) # load directly from RcppArmadillo function
     S <- cbind(sqrt(1 - w^2) * v, w)
     if (sqrt(sum((ini-mu)^2)) < 100*.Machine$double.eps){
       A = diag(length(ini))
     } else {
-      A <- rotation(ini, mu)  
+      A <- aux_rotation(ini, mu)
     }
     x <- tcrossprod(S, A)
   }

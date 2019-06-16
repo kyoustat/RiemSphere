@@ -3,6 +3,7 @@
 # 02. aux_exp       : mu (point) and v (tangent)
 # 03. aux_intmean   : compute intrinsic mean returned as a vector
 # 04. aux_dist_1toN : compute intrinsic distance for a vector vs matrix
+# 05. aux_rotation  : compute a rotation matrix R from 'a' to 'b'; R%*%a = b
 
 # 01. aux_log -------------------------------------------------------------
 #' @keywords internal
@@ -52,3 +53,20 @@ aux_dist_1toN <- function(x, maty){
   }
   return(as.vector(apply(maty, 1, dist_one)))
 }
+
+
+# 05. aux_rotation --------------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_rotation <- function(a, b) {
+  p <- length(a)
+  ab <- sum(a * b)
+  ca <- a - b * ab
+  ca <- ca/sqrt(sum(ca^2))
+  A <- b %*% t(ca)
+  A <- A - t(A)
+  theta <- acos(ab)
+  diag(p) + sin(theta) * A + (cos(theta) - 1) * (b %*% 
+                                                   t(b) + ca %*% t(ca))
+}
+# 05. aux_rotation  : compute a rotation matrix from 'a' to 'b'
