@@ -23,7 +23,7 @@ check_unitvec <- function(x){
 #' @noRd
 check_num_nonneg <- function(x){
   cond1 = (length(x)==1)
-  cond2 = ((all(is.finite(x)))&&(!any(is.na(x)))&&(all(x>0)))
+  cond2 = ((all(is.finite(x)))&&(!any(is.na(x)))&&(all(x>=0)))
   if (cond1&&cond2){
     return(TRUE)
   } else {

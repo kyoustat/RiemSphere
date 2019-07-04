@@ -95,7 +95,7 @@ lambda_method2 <- function(data, mean){
   return(output)
 }
 
-# METHOD 3. KISUNG'S IMPLEMENTATION OF NEWTON'S METHOD, NUMERICAL
+# METHOD 3. KISUNG'S IMPLEMENTATION OF NEWTON'S METHOD + FINITE DIFFERENCE
 #' @keywords internal
 #' @noRd
 lambda_method3 <- function(data, mean){
@@ -124,21 +124,37 @@ lambda_method3 <- function(data, mean){
     return(term1+term2)
   }
   
+  t0 = n*log(2*(pi^((D-1)/2))/gamma((D-1)/2))
+  opt.fun.red <- function(lambda){
+    dspnorm.constant <- function(lbd, D){ # lbd : lambda / D : dimension
+      myfunc <- function(r){
+        return(exp(-lbd*(r^2)/2)*((sin(r))^(D-2)))
+      }
+      return(stats::integrate(myfunc, lower=0, upper=pi, rel.tol=sqrt(.Machine$double.eps))$value)
+    }
+    myfun <- function(r){
+      return(exp(-lambda*(r^2)/2)*((sin(r))^(D-2)))
+    }
+    term1 = (lambda*C)/2
+    term2 = n*log(dspnorm.constant(lambda,D)) + t0
+    return(term1+term2)
+  }
+  
   # 4. run Newton's iteration
   # 4-1. try several inputs and rough start over a grid
-  candidates = sort(stats::runif(10, min=0, max=12345))
-  canvals    = apply(matrix(candidates), 1, opt.fun)
-  xold       = candidates[which.max(canvals)]
-  # xold = 1
+  # candidates = sort(stats::runif(10, min=0, max=1234))
+  # canvals    = apply(matrix(candidates), 1, opt.fun)
+  # xold       = candidates[which.max(canvals)]
+  xold = 1
   
   # 4-2. run iterations
   maxiter = 1000
   for (i in 1:maxiter){
-    # print(paste("iteration for Newton : ",i," initiated..", sep=""))
+    # print(paste("iteration for Method 3 : ",i," initiated..", sep=""))
     h = min(abs(xold)/2, 1e-4)
-    g.right = opt.fun(xold+h)
-    g.mid   = opt.fun(xold)
-    g.left  = opt.fun(xold-h)
+    g.right = opt.fun.red(xold+h)
+    g.mid   = opt.fun.red(xold)
+    g.left  = opt.fun.red(xold-h)
     xnew    = xold - (h/2)*(g.right-g.left)/(g.right-(2*g.mid)+g.left)
     xinc    = abs(xnew-xold)
     xold    = xnew
@@ -153,11 +169,30 @@ lambda_method3 <- function(data, mean){
 }
 
 
+# # COMPARE THREE METHODS
+# myp   = 5
+# mylbd = stats::runif(1, min=0.0001, max=15)
+# myn   = 2000
+# mymu  = rnorm(myp)
+# mymu  = mymu/sqrt(sum(mymu^2))
+# myx   = RiemSphere::rspnorm(myn, mymu, lambda=mylbd)
+# mle.spnorm(myx, method=1)
+# mle.spnorm(myx, method=2)
+# mle.spnorm(myx, method=3)
+# 
+# 
+# library(ggplot2)
+# library(microbenchmark)  # time comparison of multiple methods
+# dev.off()
+# lbdtime <- microbenchmark(
+#   deoptim = mle.spnorm(myx, method=1),
+#   statopt = mle.spnorm(myx, method=2),
+#   newton1 = mle.spnorm(myx, method=3), times=20L
+# )
+# autoplot(lbdtime)
 
 
 
-  
-# # 
 # # TESTER FOR MLE ESTIMATION -----------------------------------------------
 # myp   = 5
 # mylbd = stats::runif(1, min=0.0001, max=15)
@@ -226,7 +261,8 @@ lambda_method3 <- function(data, mean){
 # lbdtime <- microbenchmark(
 #   deoptim = mle.spnorm(myx, method=1),
 #   statopt = mle.spnorm(myx, method=2),
-#   newtons = mle.spnorm(myx, method=3), times=20L
+#   newton1 = mle.spnorm(myx, method=3), 
+#   newton2 = mle.spnorm(myx, method=4), times=20L
 # )
 # autoplot(lbdtime)
 # 

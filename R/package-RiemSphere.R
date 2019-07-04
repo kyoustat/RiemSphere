@@ -6,8 +6,9 @@
 #' @name RiemSphere
 #' @import Rdpack
 #' @import RiemBase
+#' @importFrom cluster pam
 #' @importFrom DEoptim DEoptim DEoptim.control
-#' @importFrom stats integrate optimize uniroot runif rnorm
+#' @importFrom stats integrate optimize uniroot runif rnorm kmeans as.dist
 #' @importFrom utils packageVersion
 #' @importFrom Rcpp evalCpp
 #' @useDynLib RiemSphere
