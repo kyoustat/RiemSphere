@@ -53,7 +53,7 @@ gskmeans <- function(x, k=2, maxiter=100){
 
 # trial -------------------------------------------------------------------
 # (1) gskmeans, gskmedoids work all well compared to mixture !
-#
+# 
 # k <- runif(3, 10, 20)
 # prob <- rep(1/3, 3)
 # mu <- matrix(rnorm(3*2), ncol = 2)
@@ -61,10 +61,10 @@ gskmeans <- function(x, k=2, maxiter=100){
 # myx <- rmixvmf(200, prob, mu, k)$x
 # myd <- data.frame(x=myx[,1], y=myx[,2])
 # 
-# k1 <- kmeans(myx, 3)$cluster
-# k2 <- gskmeans(myx, 3)$cluster
-# k3 <- mix.vmf(myx, 3)$pred
-# k4 <- gskmedoids(myx, 3)$cluster
+# k1 <- kmeans(myx, 4)$cluster
+# k2 <- gskmeans(myx, 4)$cluster
+# k3 <- mix.vmf(myx, 4)$pred
+# k4 <- gskmedoids(myx, 4)$cluster
 # 
 # myd$k1 = k1
 # myd$k2 = k2
