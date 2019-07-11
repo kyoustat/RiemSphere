@@ -12,6 +12,9 @@ gskmeans <- function(x, k=2, maxiter=100){
   if (k >= (n-1)){
     stop("* gskmeans : the number of clusters is too big. Try with a smaller number.")
   }
+  if (k<2){
+    stop("* gskmeans : the number of clusters should be at least 2.")
+  }
   
   ## Initialization for both centers (ctd) and labels (label)
   naivek  = stats::kmeans(x, k)

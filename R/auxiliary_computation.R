@@ -10,6 +10,7 @@
 # 09. aux_clustermean : compute cluster means per class
 # 10. aux_stack3d     : stack riemdata as 3d array
 # 11. aux_wfrechet    : compute weighted frechet mean
+# 12. aux_latent2hard : for each row, assign 1 to the largest and 0 others.
 
 # 01. aux_log -------------------------------------------------------------
 #' @keywords internal
@@ -173,7 +174,8 @@ aux_stack3d <- function(riemdata){
 
 
 # 11. aux_wfrechet --------------------------------------------------------
-#' @export
+#' @keywords internal
+#' @noRd
 aux_wfrechet <- function(dat, weight=rep(1,nrow(dat))/nrow(dat)){
   eps = 1e-6;
   maxiter = 496;
@@ -224,3 +226,21 @@ aux_wfrechet <- function(dat, weight=rep(1,nrow(dat))/nrow(dat)){
 # }
 # graphics.off()
 # plot(seqnn,diff,"l")
+
+
+# 12. aux_latent2hard -----------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_latent2hard <- function(xx){
+  n = nrow(xx)
+  p = ncol(xx)
+  output = array(0,c(n,p))
+  for (i in 1:n){
+    ids = which.max(as.vector(xx[i,]))
+    if (length(ids)>1){
+      ids = sample(ids,1)
+    }
+    output[i,ids] = 1
+  }
+  return(output)
+}

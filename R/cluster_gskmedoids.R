@@ -12,6 +12,9 @@ gskmedoids <- function(x, k=2, maxiter=100){
   if (k >= (n-1)){
     stop("* gskmedoids : the number of clusters is too big. Try with a smaller number.")
   }
+  if (k<2){
+    stop("* gskmeans : the number of clusters should be at least 2.")
+  }
   
   ## Compute Pairwise Distance
   pdmat <- stats::as.dist(aux_dist_MtoM(x))
