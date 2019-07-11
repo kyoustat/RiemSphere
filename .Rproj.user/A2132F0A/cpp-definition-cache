@@ -2,6 +2,48 @@
     {
         "definitions" : [
             {
+                "column" : 8,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
+                "kind" : 6,
+                "line" : 11,
+                "name" : "engine_mean_eval(arma::mat, arma::cube, std::string, arma::vec)",
+                "parent_name" : "",
+                "usr" : "c:@F@engine_mean_eval#$@N@arma@C@Mat>#d#$@N@arma@C@Cube>#d#$@N@std@N@__1@C@basic_string>#C#$@N@std@N@__1@S@char_traits>#C#$@N@std@N@__1@C@allocator>#C#$@N@arma@C@Col>#d#"
+            },
+            {
+                "column" : 8,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
+                "kind" : 6,
+                "line" : 22,
+                "name" : "engine_stepsize(arma::mat, arma::mat, arma::cube, std::string, arma::vec)",
+                "parent_name" : "",
+                "usr" : "c:@F@engine_stepsize#$@N@arma@C@Mat>#d#S0_#$@N@arma@C@Cube>#d#$@N@std@N@__1@C@basic_string>#C#$@N@std@N@__1@S@char_traits>#C#$@N@std@N@__1@C@allocator>#C#$@N@arma@C@Col>#d#"
+            },
+            {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
+                "kind" : 6,
+                "line" : 37,
+                "name" : "engine_extrinsicmean(arma::cube, std::string)",
+                "parent_name" : "",
+                "usr" : "c:@F@engine_extrinsicmean#$@N@arma@C@Cube>#d#$@N@std@N@__1@C@basic_string>#C#$@N@std@N@__1@S@char_traits>#C#$@N@std@N@__1@C@allocator>#C#"
+            },
+            {
+                "column" : 12,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
+                "kind" : 6,
+                "line" : 56,
+                "name" : "engine_wmean(arma::cube, std::string, int, double, arma::vec)",
+                "parent_name" : "",
+                "usr" : "c:@F@engine_wmean#$@N@arma@C@Cube>#d#$@N@std@N@__1@C@basic_string>#C#$@N@std@N@__1@S@char_traits>#C#$@N@std@N@__1@C@allocator>#C#I#d#$@N@arma@C@Col>#d#"
+            }
+        ],
+        "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
+        "file_last_write" : 1562810075
+    },
+    {
+        "definitions" : [
+            {
                 "column" : 15,
                 "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_rvmf.cpp",
                 "kind" : 6,
@@ -13,47 +55,5 @@
         ],
         "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_rvmf.cpp",
         "file_last_write" : 1560646768
-    },
-    {
-        "definitions" : [
-            {
-                "column" : 11,
-                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpparma_hello_world.cpp",
-                "kind" : 6,
-                "line" : 18,
-                "name" : "rcpparma_hello_world",
-                "parent_name" : "",
-                "usr" : "c:@F@rcpparma_hello_world#"
-            },
-            {
-                "column" : 11,
-                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpparma_hello_world.cpp",
-                "kind" : 6,
-                "line" : 30,
-                "name" : "rcpparma_outerproduct(const arma::colvec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@rcpparma_outerproduct#&1$@N@arma@C@Col>#d#"
-            },
-            {
-                "column" : 8,
-                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpparma_hello_world.cpp",
-                "kind" : 6,
-                "line" : 38,
-                "name" : "rcpparma_innerproduct(const arma::colvec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@rcpparma_innerproduct#&1$@N@arma@C@Col>#d#"
-            },
-            {
-                "column" : 12,
-                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpparma_hello_world.cpp",
-                "kind" : 6,
-                "line" : 47,
-                "name" : "rcpparma_bothproducts(const arma::colvec &)",
-                "parent_name" : "",
-                "usr" : "c:@F@rcpparma_bothproducts#&1$@N@arma@C@Col>#d#"
-            }
-        ],
-        "file" : "/home/kisung/Desktop/RiemSphere/src/rcpparma_hello_world.cpp",
-        "file_last_write" : 1558468765
     }
 ]

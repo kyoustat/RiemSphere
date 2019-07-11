@@ -2,10 +2,10 @@
 % Please edit documentation in R/cluster_gskmeans.R
 \name{gskmeans}
 \alias{gskmeans}
-\title{Geodesic Spherical k-Means}
+\title{Clustering with Geodesic Spherical k-Means Algorithm}
 \usage{
 gskmeans(x, k = 2, maxiter = 100)
 }
 \description{
-Geodesic Spherical k-Means
+Clustering with Geodesic Spherical k-Means Algorithm
 }

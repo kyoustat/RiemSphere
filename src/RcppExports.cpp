@@ -6,6 +6,21 @@
 
 using namespace Rcpp;
 
+// engine_wmean
+Rcpp::List engine_wmean(arma::cube data, std::string name, int maxiter, double eps, arma::vec weights);
+RcppExport SEXP _RiemSphere_engine_wmean(SEXP dataSEXP, SEXP nameSEXP, SEXP maxiterSEXP, SEXP epsSEXP, SEXP weightsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::cube >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< std::string >::type name(nameSEXP);
+    Rcpp::traits::input_parameter< int >::type maxiter(maxiterSEXP);
+    Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
+    Rcpp::traits::input_parameter< arma::vec >::type weights(weightsSEXP);
+    rcpp_result_gen = Rcpp::wrap(engine_wmean(data, name, maxiter, eps, weights));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rvmf_h
 NumericVector rvmf_h(double n, double ca, double d1, double x0, double m, double k, double b);
 RcppExport SEXP _RiemSphere_rvmf_h(SEXP nSEXP, SEXP caSEXP, SEXP d1SEXP, SEXP x0SEXP, SEXP mSEXP, SEXP kSEXP, SEXP bSEXP) {
@@ -23,56 +38,10 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpparma_hello_world
-arma::mat rcpparma_hello_world();
-RcppExport SEXP _RiemSphere_rcpparma_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpparma_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_outerproduct
-arma::mat rcpparma_outerproduct(const arma::colvec& x);
-RcppExport SEXP _RiemSphere_rcpparma_outerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_outerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_innerproduct
-double rcpparma_innerproduct(const arma::colvec& x);
-RcppExport SEXP _RiemSphere_rcpparma_innerproduct(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_innerproduct(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpparma_bothproducts
-Rcpp::List rcpparma_bothproducts(const arma::colvec& x);
-RcppExport SEXP _RiemSphere_rcpparma_bothproducts(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_bothproducts(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RiemSphere_engine_wmean", (DL_FUNC) &_RiemSphere_engine_wmean, 5},
     {"_RiemSphere_rvmf_h", (DL_FUNC) &_RiemSphere_rvmf_h, 7},
-    {"_RiemSphere_rcpparma_hello_world", (DL_FUNC) &_RiemSphere_rcpparma_hello_world, 0},
-    {"_RiemSphere_rcpparma_outerproduct", (DL_FUNC) &_RiemSphere_rcpparma_outerproduct, 1},
-    {"_RiemSphere_rcpparma_innerproduct", (DL_FUNC) &_RiemSphere_rcpparma_innerproduct, 1},
-    {"_RiemSphere_rcpparma_bothproducts", (DL_FUNC) &_RiemSphere_rcpparma_bothproducts, 1},
     {NULL, NULL, 0}
 };
 

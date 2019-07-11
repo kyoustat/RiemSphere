@@ -1,4 +1,4 @@
-#' k-medoids
+#' Clustering with Geodesic Spherical k-Medoids Algorithm
 #' 
 #' 
 #' @export

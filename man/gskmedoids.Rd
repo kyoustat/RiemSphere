@@ -2,10 +2,10 @@
 % Please edit documentation in R/cluster_gskmedoids.R
 \name{gskmedoids}
 \alias{gskmedoids}
-\title{k-medoids}
+\title{Clustering with Geodesic Spherical k-Medoids Algorithm}
 \usage{
 gskmedoids(x, k = 2, maxiter = 100)
 }
 \description{
-k-medoids
+Clustering with Geodesic Spherical k-Medoids Algorithm
 }

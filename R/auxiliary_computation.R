@@ -8,6 +8,8 @@
 # 07. aux_dist_MtoM   : copmute pairwise distance matrix
 # 08. aux_assignment  : for each row, either MIN or MAX, decide an assignment
 # 09. aux_clustermean : compute cluster means per class
+# 10. aux_stack3d     : stack riemdata as 3d array
+# 11. aux_wfrechet    : compute weighted frechet mean
 
 # 01. aux_log -------------------------------------------------------------
 #' @keywords internal
@@ -48,7 +50,7 @@ aux_exp <- function(x, d){
 #' @keywords internal
 #' @noRd
 aux_intmean <- function(myx){
-  return(as.vector(rbase.mean(riemfactory(t(myx), name="sphere"))$x))
+  return(as.vector(aux_wfrechet(myx)$x))
 }
 
 
@@ -154,3 +156,71 @@ aux_clustermean <- function(dat, assignment){
   # 3. return the result
   return(centers)
 }
+
+# 10. aux_stack3d ---------------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_stack3d <- function(riemdata){
+  msize = riemdata$size
+  ndata = length(riemdata$data)
+  
+  matdata = array(0,c(msize[1], msize[2], ndata))
+  for (i in 1:ndata){
+    matdata[,,i] = (riemdata$data[[i]])
+  }
+  return(matdata)
+}
+
+
+# 11. aux_wfrechet --------------------------------------------------------
+#' @export
+aux_wfrechet <- function(dat, weight=rep(1,nrow(dat))/nrow(dat)){
+  eps = 1e-6;
+  maxiter = 496;
+  
+  rdat    = RiemBase::riemfactory(t(dat), name="sphere")
+  newdata = aux_stack3d(rdat)  # arg 1. 
+  mfdname = tolower(rdat$name) # arg 2.
+  
+  output  = engine_wmean(newdata, mfdname, as.integer(maxiter), as.double(eps), weight)
+  return(output)
+}
+# TEST 1. rbase.mean may be incorrect
+# library(Directional)
+# mymu = rnorm(4); mymu = mymu/sqrt(sum(mymu^2));
+# mykk = 1.0;
+# 
+# diff1 = rep(0,100)
+# diff2 = rep(0,100)
+# seqnn = round(seq(from=10,to=500,length.out=100))
+# for (i in 1:100){
+#   x = rspnorm(seqnn[i], mymu, mykk)
+# 
+#   out1 = as.vector(aux_wfrechet(x)$x)
+#   out2 = as.vector(RiemBase::rbase.mean(riemfactory(t(x), name="sphere"))$x)
+# 
+#   diff1[i] = sum((mymu-out1)^2)
+#   diff2[i] = sum((mymu-out2)^2)
+#   print(paste("iteration ",i,"/100 complete..",sep=""))
+# }
+# par(mfrow=c(1,2))
+# plot(seqnn,diff1,"l")
+# plot(seqnn,diff2,"l")
+
+# # TEST 2. engine_wmean's average performance
+# mymu = rnorm(4); mymu = mymu/sqrt(sum(mymu^2));
+# mykk = 1.0;
+# diff  = rep(0,100)
+# seqnn = round(seq(from=10,to=400,length.out=100))
+# for (i in 1:100){
+#   tmp = rep(0,10)
+#   for (j in 1:10){
+#     x   = rspnorm(seqnn[i], mymu, mykk)
+#     out = as.vector(aux_wfrechet(x)$x)
+#     tmp[j] = sqrt(sum((mymu-out)^2))
+#   }
+#   diff[i] = mean(tmp)
+#   print(paste("iteration ",i," complete..",sep=""))
+# }
+# graphics.off()
+# plot(seqnn,diff,"l")
