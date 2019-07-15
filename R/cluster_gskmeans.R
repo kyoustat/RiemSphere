@@ -1,4 +1,4 @@
-#' Clustering with Geodesic Spherical k-Means Algorithm
+#' Geometric k-Means Clustering
 #' 
 #' 
 #' @export

@@ -1,7 +1,8 @@
 #' Clustering with Geodesic Spherical k-Medoids Algorithm
 #' 
 #' 
-#' @export
+#' @keywords internal
+#' @noRd
 gskmedoids <- function(x, k=2, maxiter=100){
   ## Preprocessing
   check_datamat(x)  # checking the datamatrix
@@ -13,7 +14,7 @@ gskmedoids <- function(x, k=2, maxiter=100){
     stop("* gskmedoids : the number of clusters is too big. Try with a smaller number.")
   }
   if (k<2){
-    stop("* gskmeans : the number of clusters should be at least 2.")
+    stop("* gskmedoids : the number of clusters should be at least 2.")
   }
   
   ## Compute Pairwise Distance
