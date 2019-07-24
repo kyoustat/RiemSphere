@@ -11,6 +11,11 @@
 # 10. aux_stack3d     : stack riemdata as 3d array
 # 11. aux_wfrechet    : compute weighted frechet mean
 # 12. aux_latent2hard : for each row, assign 1 to the largest and 0 others.
+# 13. aux_vmf_Apk     : for von-Mises
+#     aux_vmf_Rbar    
+# 13. aux_vmf_apk
+# 14. aux_strcmp      : strcmp of MATLAB
+
 
 # 01. aux_log -------------------------------------------------------------
 #' @keywords internal
@@ -243,4 +248,44 @@ aux_latent2hard <- function(xx){
     output[i,ids] = 1
   }
   return(output)
+}
+
+
+
+# 13. aux_ for von-Mises  -------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_vmf_Apk <- function(p, kappa){
+  return(besselI(kappa, p/2)/besselI(kappa, (p/2)-1))
+}
+#' @keywords internal
+#' @noRd
+aux_vmf_Rbar <- function(dat){ # (n x p) convention
+  xbar = colMeans(dat)
+  return(sqrt(sum(xbar^2)))
+}
+#' @keywords internal
+#' @noRd
+aux_vmf_apk <- function(p, kappa){
+  term1 = (p/2 - 1)*log(kappa/2)
+  term2 = log(gamma(p/2))
+  term3 = log(besselI(kappa, (p/2)-1))
+  
+  logcpk = term1-term2-term3
+  return(-logcpk)
+}
+
+
+# 14. aux_strcmp ----------------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_strcmp <- function(s1, s2) {
+  if (!is.vector(s1, mode="character") || !is.vector(s1, mode="character"))
+    stop("Arguments 's1' and 's2' must be character vectors.")
+  
+  if (length(s1) == length(s2)){
+    return(all(s1 == s2))
+  } else {
+    return(FALSE)
+  }
 }
