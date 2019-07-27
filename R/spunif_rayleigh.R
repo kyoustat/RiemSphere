@@ -1,7 +1,7 @@
 #' Rayleigh Test of Uniformity
 #' 
 #' @export
-testunif.Rayleigh <- function(x, method=c("Original","Modified")){
+spunif.Rayleigh <- function(x, method=c("Original","Modified")){
   ##############################################################
   # Preprocessing
   check_datamat(x)  # checking the datamatrix

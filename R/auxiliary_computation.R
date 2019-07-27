@@ -11,9 +11,11 @@
 # 10. aux_stack3d     : stack riemdata as 3d array
 # 11. aux_wfrechet    : compute weighted frechet mean
 # 12. aux_latent2hard : for each row, assign 1 to the largest and 0 others.
-# 13. aux_vmf_Apk     : for von-Mises
+# 13. aux_vmf_Apk         Apk from von-Mises Fisher
+#     aux_vmf_dApk        1st derivate
+#     aux_vmf_d2Apk       2nd derivate
 #     aux_vmf_Rbar    
-# 13. aux_vmf_apk
+# 13. aux_vmf_apk         from the book
 # 14. aux_strcmp      : strcmp of MATLAB
 
 
@@ -256,7 +258,27 @@ aux_latent2hard <- function(xx){
 #' @keywords internal
 #' @noRd
 aux_vmf_Apk <- function(p, kappa){
-  return(besselI(kappa, p/2)/besselI(kappa, (p/2)-1))
+  if (p > 100){
+    return(exp(Bessel::besselI.nuAsym(kappa, p/2, kmax=5, log=TRUE)- Bessel::besselI.nuAsym(kappa, (p/2)-1, kmax=5, log=TRUE)))
+  } else {
+    return(exp(Bessel::besselIasym(kappa, p/2, log = TRUE) - Bessel::besselIasym(kappa, (p/2)-1, log=TRUE)))
+  }
+}
+#' @keywords internal
+#' @noRd
+aux_vmf_dApk <- function(p, kappa){  # first derivative
+  Apk = aux_vmf_Apk(p, kappa)
+  return(1 - (Apk^2) - ((p-1)*Apk/kappa))
+}
+#' @keywords internal
+#' @noRd
+aux_vmf_d2Apk <- function(p, kappa){ # 2nd derivative
+  Apk = aux_vmf_Apk(p, kappa)
+  term1 = 2*(Apk^3)
+  term2 = 3*((p-1)/kappa)*(Apk^2)
+  term3 = ((p*(p-1) - 2*(kappa^2))/(kappa^2))*Apk
+  term4 = -(p-1)/kappa
+  return(term1+term2+term3+term4)
 }
 #' @keywords internal
 #' @noRd
@@ -269,7 +291,7 @@ aux_vmf_Rbar <- function(dat){ # (n x p) convention
 aux_vmf_apk <- function(p, kappa){
   term1 = (p/2 - 1)*log(kappa/2)
   term2 = log(gamma(p/2))
-  term3 = log(besselI(kappa, (p/2)-1))
+  term3 = besselIasym(kappa, (p/2)-1, log=TRUE)
   
   logcpk = term1-term2-term3
   return(-logcpk)

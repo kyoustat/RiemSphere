@@ -2,22 +2,26 @@
 #' 
 #' @export
 mle.spnorm <- function(x, method=1){
+  ########################################################################
   ## PREPROCESSING : check data
   check_datamat(x)
   if ((is.vector(x))||(nrow(x)==1)){
     stop("* mle.spnorm : computing MLE requires more than one observations.")
   }
   
+  ########################################################################
   ## STEP 1. intrinsic mean
   opt.mean = aux_intmean(x)
   
+  ########################################################################
   ## STEP 2. optimal lambda can be computed ?
   opt.lambda = switch (method,
     "1" = lambda_method1(x, opt.mean), # DEoptim not working well
-    "2" = lambda_method2(x, opt.mean),
-    "3" = lambda_method3(x, opt.mean)
+    "2" = lambda_method2(x, opt.mean), # optimize function
+    "3" = lambda_method3(x, opt.mean)  # newton
   )
   
+  ########################################################################
   ## RETURN
   output = list()
   output$mu = opt.mean

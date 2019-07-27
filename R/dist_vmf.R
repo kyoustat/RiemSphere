@@ -103,3 +103,20 @@ rvmf_uniform <- function(n, mu, k=0){
   x  = x1/sqrt(base::rowSums(x1^2))
   return(x)
 }
+
+
+# # test 1. besselI and integration -----------------------------------------
+# p = 3
+# vec.kap = seq(from=0.01,to=20,length.out=100)
+# 
+# res1 = rep(0,100) # besselI function
+# res2 = rep(0,100) # manual integration
+# 
+# for (i in 1:100){
+#   kappa = vec.kap[i]
+#   myfun <- function(t){
+#     return((t^2)*exp(kappa*t)*((1-(t^2))^((p-3)/2)))
+#   }
+#   res2[i] = stats::integrate(myfun, lower=-1, upper=1)$value
+#   res1[i] = besselI(kappa, p/3)
+# }
