@@ -1,4 +1,4 @@
-#' Geometric k-Means Clustering
+#' Geometric Spherical k-Means Clustering
 #' 
 #' 
 #' @export
@@ -54,7 +54,7 @@ gskmeans <- function(x, k=2, maxiter=100){
 
 
 
-# trial -------------------------------------------------------------------
+# # trial -------------------------------------------------------------------
 # (1) gskmeans, gskmedoids work all well compared to mixture !
 # 
 # k <- runif(3, 10, 20)

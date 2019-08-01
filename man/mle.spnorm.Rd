@@ -4,7 +4,7 @@
 \alias{mle.spnorm}
 \title{MLE for SPNORM}
 \usage{
-mle.spnorm(x, method = 1)
+mle.spnorm(x, method = c("Newton", "Halley", "Optimize"))
 }
 \description{
 MLE for SPNORM

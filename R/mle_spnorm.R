@@ -1,13 +1,16 @@
 #' MLE for SPNORM
 #' 
 #' @export
-mle.spnorm <- function(x, method=1){
+mle.spnorm <- function(x, method=c("Newton","Halley","Optimize")){
   ########################################################################
   ## PREPROCESSING : check data
   check_datamat(x)
   if ((is.vector(x))||(nrow(x)==1)){
     stop("* mle.spnorm : computing MLE requires more than one observations.")
   }
+  method = tolower(method)
+  alldip = c("newton","halley","optimize")
+  method = match.arg(method, alldip)
   
   ########################################################################
   ## STEP 1. intrinsic mean
@@ -16,9 +19,9 @@ mle.spnorm <- function(x, method=1){
   ########################################################################
   ## STEP 2. optimal lambda can be computed ?
   opt.lambda = switch (method,
-    "1" = lambda_method1(x, opt.mean), # DEoptim not working well
-    "2" = lambda_method2(x, opt.mean), # optimize function
-    "3" = lambda_method3(x, opt.mean)  # newton
+    "optimize" = lambda_method2(x, opt.mean), # optimize function
+    "newton"   = lambda_method3(x, opt.mean), # numerical newton
+    "halley"   = lambda_method4(x, opt.mean)
   )
   
   ########################################################################
@@ -146,10 +149,13 @@ lambda_method3 <- function(data, mean){
   
   # 4. run Newton's iteration
   # 4-1. try several inputs and rough start over a grid
-  # candidates = sort(stats::runif(10, min=0, max=1234))
-  # canvals    = apply(matrix(candidates), 1, opt.fun)
-  # xold       = candidates[which.max(canvals)]
-  xold = 1
+  auxval = C/n
+  if (auxval < 1){
+    xold = 1
+  } else {
+    xold = auxval
+  }
+  
   
   # 4-2. run iterations
   maxiter = 1000
@@ -172,6 +178,97 @@ lambda_method3 <- function(data, mean){
   return(xold)
 }
 
+# METHOD 4. KISUNG'S IMPLEMENTATION OF HALLEY'S METHOD + FINITE DIFFERENCE
+#' @keywords internal
+#' @noRd
+lambda_method4 <- function(data, mean){
+  # 1. parameters
+  D = length(mean)
+  n = nrow(data)
+  
+  # 2. compute a constant
+  C = sum(aux_dist_1toN(mean, data)^2)
+  
+  # 3. compute a negative log-likelihood function to be minimized
+  opt.fun <- function(lambda){
+    dspnorm.constant <- function(lbd, D){ # lbd : lambda / D : dimension
+      myfunc <- function(r){
+        return(exp(-lbd*(r^2)/2)*((sin(r))^(D-2)))
+      }
+      t1 = 2*(pi^((D-1)/2))/gamma((D-1)/2) # one possible source of error
+      t2 = stats::integrate(myfunc, lower=0, upper=pi, rel.tol=sqrt(.Machine$double.eps))$value
+      return(t1*t2)
+    }
+    myfun <- function(r){
+      return(exp(-lambda*(r^2)/2)*((sin(r))^(D-2)))
+    }
+    term1 = (lambda*C)/2
+    term2 = n*log(dspnorm.constant(lambda,D))
+    return(term1+term2)
+  }
+  
+  t0 = n*log(2*(pi^((D-1)/2))/gamma((D-1)/2))
+  opt.fun.red <- function(lambda){
+    dspnorm.constant <- function(lbd, D){ # lbd : lambda / D : dimension
+      myfunc <- function(r){
+        return(exp(-lbd*(r^2)/2)*((sin(r))^(D-2)))
+      }
+      return(stats::integrate(myfunc, lower=0, upper=pi, rel.tol=sqrt(.Machine$double.eps))$value)
+    }
+    myfun <- function(r){
+      return(exp(-lambda*(r^2)/2)*((sin(r))^(D-2)))
+    }
+    term1 = (lambda*C)/2
+    term2 = n*log(dspnorm.constant(lambda,D)) + t0
+    return(term1+term2)
+  }
+  
+  # 4. run Halley's Method
+  # 4-1. try several inputs and rough start over a grid
+  # candidates = sort(stats::runif(10, min=0, max=1234))
+  # canvals    = apply(matrix(candidates), 1, opt.fun)
+  # xold       = candidates[which.max(canvals)]
+  auxval = C/n
+  if (auxval < 1){
+    xold = 1
+  } else {
+    xold = auxval
+  }
+
+  # 4-2. run iterations
+  maxiter = 1000
+  sqrteps = (.Machine$double.eps)^(1/4)
+  for (i in 1:maxiter){
+   
+    # h = min(abs(xold), sqrteps)/8
+    h = min(abs(xold)/2, 1e-4)
+    
+    # 5-point grid evaluation
+    grr = opt.fun.red(xold+2*h)
+    gr  = opt.fun.red(xold+h)
+    g   = opt.fun.red(xold)
+    gl  = opt.fun.red(xold-h)
+    gll = opt.fun.red(xold-2*h)
+    
+    gd1 = (gr-gl)/(2*h)                       # first derivative
+    gd2 = (gr-(2*g)+gl)/(h^2)                 # second derivative
+    gd3 = (grr - 2*gr + 2*gl - gll)/(2*(h^3)) # third derivative
+    
+    xnew    = xold - ((2*gd1*gd2)/(2*(gd2^2) - gd1*gd3))
+    # print(paste("iteration for Halley's : ",i," done with lambda=",xnew, sep=""))
+    xinc    = abs(xnew-xold)
+    xold    = xnew
+    
+    if (xinc < .Machine$double.eps^0.25){
+      break
+    }
+  }
+  
+  # 5. return an optimal solution
+  return(xold)
+}
+
+
 
 # # COMPARE THREE METHODS
 # myp   = 5
@@ -180,18 +277,18 @@ lambda_method3 <- function(data, mean){
 # mymu  = rnorm(myp)
 # mymu  = mymu/sqrt(sum(mymu^2))
 # myx   = RiemSphere::rspnorm(myn, mymu, lambda=mylbd)
-# mle.spnorm(myx, method=1)
-# mle.spnorm(myx, method=2)
-# mle.spnorm(myx, method=3)
+# mle.spnorm(myx, method="newton")
+# mle.spnorm(myx, method="halley")
+# mle.spnorm(myx, method="optimize")
 # 
 # 
 # library(ggplot2)
 # library(microbenchmark)  # time comparison of multiple methods
 # dev.off()
 # lbdtime <- microbenchmark(
-#   deoptim = mle.spnorm(myx, method=1),
-#   statopt = mle.spnorm(myx, method=2),
-#   newton1 = mle.spnorm(myx, method=3), times=20L
+#   newton = mle.spnorm(myx, method="newton"),
+#   halley = mle.spnorm(myx, method="halley"),
+#   Roptim = mle.spnorm(myx, method="optimize"), times=10L
 # )
 # autoplot(lbdtime)
 

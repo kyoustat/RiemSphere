@@ -4,8 +4,10 @@
 \alias{mle.vmf}
 \title{MLE for von Mises-Fisher}
 \usage{
-mle.vmf(x, method = c("Banerjee", "Song", "Sra", "Tanabe", "Uniroot"))
+mle.vmf(x, method = c("Banerjee", "nmarg1", "nmarg2", "nmle1", "nmle2",
+  "Song", "Sra", "Tanabe", "Uniroot"))
 }
 \description{
-MLE for von Mises-Fisher
+'Marginal Approximation (MA)' ; 1,2,3
+'Marginal Exact         (ME)' ; 1,2,3
 }

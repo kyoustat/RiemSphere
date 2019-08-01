@@ -1,22 +1,24 @@
 # Auxiliary Computation Functions -----------------------------------------
-# 01. aux_log         : mu (point) and x (point)
-# 02. aux_exp         : mu (point) and v (tangent)
-# 03. aux_intmean     : compute intrinsic mean returned as a vector
-# 04. aux_dist_1toN   : compute intrinsic distance for a vector vs matrix
-# 05. aux_rotation    : compute a rotation matrix R from 'a' to 'b'; R%*%a = b
-# 06. aux_dist_MtoN   : compute intrinsic distance from M-row to N-row matrix.
-# 07. aux_dist_MtoM   : copmute pairwise distance matrix
-# 08. aux_assignment  : for each row, either MIN or MAX, decide an assignment
-# 09. aux_clustermean : compute cluster means per class
-# 10. aux_stack3d     : stack riemdata as 3d array
-# 11. aux_wfrechet    : compute weighted frechet mean
-# 12. aux_latent2hard : for each row, assign 1 to the largest and 0 others.
-# 13. aux_vmf_Apk         Apk from von-Mises Fisher
-#     aux_vmf_dApk        1st derivate
-#     aux_vmf_d2Apk       2nd derivate
-#     aux_vmf_Rbar    
-# 13. aux_vmf_apk         from the book
-# 14. aux_strcmp      : strcmp of MATLAB
+# 01. aux_log             : mu (point) and x (point)
+# 02. aux_exp             : mu (point) and v (tangent)
+# 03. aux_intmean         : compute intrinsic mean returned as a vector
+# 04. aux_dist_1toN       : compute intrinsic distance for a vector vs matrix
+# 05. aux_rotation        : compute a rotation matrix R from 'a' to 'b'; R%*%a = b
+# 06. aux_dist_MtoN       : compute intrinsic distance from M-row to N-row matrix.
+# 07. aux_dist_MtoM       : copmute pairwise distance matrix
+# 08. aux_assignment      : for each row, either MIN or MAX, decide an assignment
+# 09. aux_clustermean     : compute cluster means per class
+# 10. aux_stack3d         : stack riemdata as 3d array
+# 11. aux_wfrechet        : compute weighted frechet mean
+# 12. aux_latent2hard     : for each row, assign 1 to the largest and 0 others.
+# 13. aux_vmf_Apk            Apk from von-Mises Fisher
+#     aux_vmf_dApk           1st derivate
+#     aux_vmf_d2Apk          2nd derivate
+#     aux_vmf_Rbar       
+# 13. aux_vmf_apk            from the book
+# 14. aux_strcmp          : strcmp of MATLAB
+# 15. aux_vmf_ReML_kappa  : compute kappa given mu0 for vMF model 
+# 16. aux_besselI         : Song (2012)'s truncated power-series method
 
 
 # 01. aux_log -------------------------------------------------------------
@@ -258,11 +260,26 @@ aux_latent2hard <- function(xx){
 #' @keywords internal
 #' @noRd
 aux_vmf_Apk <- function(p, kappa){
-  if (p > 100){
-    return(exp(Bessel::besselI.nuAsym(kappa, p/2, kmax=5, log=TRUE)- Bessel::besselI.nuAsym(kappa, (p/2)-1, kmax=5, log=TRUE)))
+  if (kappa > 100){
+    output = tryCatch({
+      exp(besselIasym(kappa, p/2, log=TRUE) - besselIasym(kappa, (p/2)-1, log=TRUE))
+    }, error = function(e){
+      exp(aux_besselI(kappa, p/2)-aux_besselI(kappa, (p/2)-1))
+    }, warning = function(w){
+      exp(aux_besselI(kappa, p/2)-aux_besselI(kappa, (p/2)-1))
+    })
+  } else if (p > 100){
+    output = tryCatch({
+      exp(besselI.nuAsym(kappa, p/2, 5, log=TRUE)-besselI.nuAsym(kappa, (p/2)-1, 5, log=TRUE))
+    }, error = function(cond){
+      exp(aux_besselI(kappa, p/2)-aux_besselI(kappa, (p/2)-1))
+    }, warning = function(){
+      exp(aux_besselI(kappa, p/2)-aux_besselI(kappa, (p/2)-1))
+    })
   } else {
-    return(exp(Bessel::besselIasym(kappa, p/2, log = TRUE) - Bessel::besselIasym(kappa, (p/2)-1, log=TRUE)))
+    output = exp(log(besselI(kappa, p/2)) - log(besselI(kappa,(p/2)-1)))
   }
+  return(output)
 }
 #' @keywords internal
 #' @noRd
@@ -289,12 +306,12 @@ aux_vmf_Rbar <- function(dat){ # (n x p) convention
 #' @keywords internal
 #' @noRd
 aux_vmf_apk <- function(p, kappa){
-  term1 = (p/2 - 1)*log(kappa/2)
-  term2 = log(gamma(p/2))
-  term3 = besselIasym(kappa, (p/2)-1, log=TRUE)
-  
-  logcpk = term1-term2-term3
-  return(-logcpk)
+  term1 = (1-(p/2))*(log(kappa)-log(2))
+  term2 = lgamma(p/2)
+  term3 = aux_besselI(kappa, (p/2)-1)
+
+  output = term1+term2+term3
+  return(output)
 }
 
 
@@ -310,4 +327,82 @@ aux_strcmp <- function(s1, s2) {
   } else {
     return(FALSE)
   }
+}
+
+# 15. aux_vmf_ReML_kappa --------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_vmf_ReML_kappa <- function(dat, mu0){
+  # parameters
+  n = nrow(dat)
+  p = ncol(dat)
+  xbar = as.vector(colMeans(dat))
+  C    = sum(xbar*as.vector(mu0))
+  
+  min.fun <- function(kappa){
+    return(aux_vmf_apk(p, kappa) - kappa*C)
+  }
+  
+  kap.old = vmf_2005banerjee(dat)
+  maxiter = 123
+  epsthr  = 1e-6
+  epserr.ReML  = 100
+  citer   = 1
+  while (epserr.ReML > epsthr){
+    h = min(abs(kap.old),1e-3)/2
+    fr = min.fun(kap.old + h)
+    fc = min.fun(kap.old)
+    fl = min.fun(kap.old - h)
+    
+    kap.new = kap.old - (h/2)*(fr-fl)/(fr-(2*fc)+fl)
+    epserr.ReML  = abs((kap.old - kap.new))
+    kap.old = kap.new
+    citer   = citer + 1
+    if (citer > maxiter){
+      break
+    }
+  }
+  return(kap.old)
+}
+
+
+# 16. aux_besselI ---------------------------------------------------------
+#' @export
+aux_besselI <- function(x, s, log=TRUE){
+  c0 = 1.000000000190015
+  c1 = 76.18009172947146
+  c2 = -86.50532032941677
+  c3 = 24.01409824083091
+  c4 = 1.231739572450155
+  c5 = 1.208650973866179*(1e-3)
+  c6 = -5.395239384953*(1e-6)
+  
+  t1 = c0 + c1/(s+1) + c2/(s+2) + c3/(s+3) + c4/(s+4) + c5/(s+5) + c6/(s+6)
+  t2 = (s+0.5)*log(s+5.5) - (s+5.5)
+  t1 = s*log(0.5*x) - 0.5*log(2*pi) - t2 - log(t1)
+  R = 1.0
+  M = 1.0
+  k = 1
+  
+  epsthr  = 1e-6
+  epserr.bessel  = 1000
+  maxiter = 500
+  citer   = 1
+  x2      = (x^2)
+  while (epserr.bessel > epsthr){
+    citer = citer + 1
+    R = R*(0.25*(x2))/((s+k)*k)
+    M = M + R
+    epserr.bessel = R/M
+    k = (k+1)
+    citer = citer + 1
+    if (citer > maxiter){
+      break
+    }
+  }
+  output = t1 + log(M)
+  if (log==FALSE){
+    output = exp(output)
+  }
+  return(output)
 }

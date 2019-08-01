@@ -2,10 +2,10 @@
 % Please edit documentation in R/cluster_gskmeans.R
 \name{gskmeans}
 \alias{gskmeans}
-\title{Geometric k-Means Clustering}
+\title{Geometric Spherical k-Means Clustering}
 \usage{
 gskmeans(x, k = 2, maxiter = 100)
 }
 \description{
-Geometric k-Means Clustering
+Geometric Spherical k-Means Clustering
 }
