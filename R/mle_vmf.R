@@ -4,7 +4,7 @@
 #' 'Marginal Exact         (ME)' ; 1,2,3
 #' 
 #' @export
-mle.vmf <- function(x, method=c("Banerjee","nmarg1","nmarg2","nmle1","nmle2",
+mle.vmf <- function(x, method=c("Banerjee","Christie","nmarg1","nmarg2","nmle1","nmle2",
                                 "Song","Sra","Tanabe","Uniroot")){
   ########################################################################
   ## PREPROCESSING : check data
@@ -17,7 +17,7 @@ mle.vmf <- function(x, method=c("Banerjee","nmarg1","nmarg2","nmle1","nmle2",
   }
   method = tolower(method)
   alldip = c("banerjee","sra","tanabe","uniroot","song","nmarg1","nmarg2","me1","me2",
-             "nmle1","nmle2") # me1 and me2 are just saved
+             "nmle1","nmle2","christie") # me1 and me2 are just saved
   method = match.arg(method, alldip)
   
   
@@ -39,7 +39,8 @@ mle.vmf <- function(x, method=c("Banerjee","nmarg1","nmarg2","nmle1","nmle2",
     "me1"      = vmf_me1(x), # ME: marginal exact
     "me2"      = vmf_me2(x),
     "nmle1"    = vmf_nmle1(x),
-    "nmle2"    = vmf_nmle2(x)
+    "nmle2"    = vmf_nmle2(x),
+    "christie" = vmf_christie(x)
   )
   
   ########################################################################
@@ -442,6 +443,39 @@ vmf_nmle2 <- function(dat){
   return(kap.old)
 }
 
+
+# 9. Christie (2014) Taylor Series ----------------------------------------
+#  I'll go with 4-th order approximation.
+#' @keywords internal
+#' @noRd
+vmf_christie <- function(x){
+  ## preliminary computations
+  p = ncol(x)
+  Rbar = aux_vmf_Rbar(x)
+  kap0 = vmf_2005banerjee(x)
+  R0   = aux_vmf_Apk(p, kap0)
+  
+  ## order 0
+  cr0 = p-kap0*((1-(R0^2))/R0)
+  ## order 1
+  Phi = 1/(1-cr0) - 2*(R0^2)/(1-(R0^2)) - 1
+  cr1 = (1/R0)*(cr0-p)*Phi
+  ## order 2
+  dPhi = cr1/(1-(cr0^2)) - 4*R0/((1-(R0^2))^2)
+  cr2  = (cr1*(Phi-1) + (cr0-p)*dPhi)/R0
+  ## order 3
+  ddPhi = 2*(cr1^2)/((1-cr0)^3) + cr2/((1-cr0)^2) - 4*(1+(3*(R0^2)))/((1-R0)^3)
+  cr3   = (cr2*(Phi-2)+(2*cr1*dPhi)+((cr0-p)*ddPhi))/R0
+  ## order 4
+  dddPhi = (6*(cr1^3))/((1-cr0)^4) + 6*cr1*cr2/((1-cr0)^3) + cr3/((1-cr0)^2) - 48*R0*(1+(R0)^2)/((1-R0)^4)
+  cr4    = (cr3*(Phi-3) + 3*cr2*dPhi + 3*cr1*ddPhi + (cr0-p)*dddPhi)/R0 # 3*cr1 part is unclear
+  
+  ## compute the output
+  cRbar  = cr0 + cr1*(Rbar-R0) + (cr2/2)*((Rbar-R0)^2) + (cr3/6)*((Rbar-R0)^3) + (cr4/24)*((Rbar-R0)^3)
+  output = Rbar*(p-cRbar)/(1-(Rbar^2))
+  return(output)
+}
+
 # ## simply test
 # x = rvmf(500, c(1,rep(0,7)), 10)
 # mle.vmf(x, method="banerjee")
@@ -455,3 +489,4 @@ vmf_nmle2 <- function(dat){
 # mle.vmf(x, method="me2")
 # mle.vmf(x, method="nmle1")
 # mle.vmf(x, method="nmle2")
+# mle.vmf(x, method="christie")
