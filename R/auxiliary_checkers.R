@@ -56,5 +56,3 @@ check_datamat <- function(x){
     return(FALSE)
   }
 }
-
-# 03. check_datamat    : whether a given input is a vector or matrix of data on sphere

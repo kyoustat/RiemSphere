@@ -13,7 +13,7 @@
 #' @importFrom cluster pam
 #' @importFrom Bessel besselI.nuAsym besselIasym
 #' @importFrom DEoptim DEoptim DEoptim.control
-#' @importFrom stats integrate optimize uniroot runif rnorm kmeans as.dist pchisq
+#' @importFrom stats integrate optimize uniroot runif rnorm kmeans as.dist pchisq dist
 #' @importFrom utils packageVersion
 #' @importFrom Rcpp evalCpp
 #' @useDynLib RiemSphere
