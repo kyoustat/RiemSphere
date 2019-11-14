@@ -2,11 +2,11 @@
 % Please edit documentation in R/mixture_spnorm.R
 \name{mix.spnorm}
 \alias{mix.spnorm}
-\title{Mixture of}
+\title{Mixture of Spherical Normal Distributions}
 \usage{
 mix.spnorm(x, k = 2, n.start = 20, hard.assign = FALSE,
   maxiter = 496, eps = 1e-05)
 }
 \description{
-Mixture of
+Mixture of Spherical Normal Distributions
 }

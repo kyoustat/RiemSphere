@@ -1,7 +1,7 @@
-#' Mixture of
+#' Mixture of Spherical Normal Distributions
 #' 
 #' @export
-mix.spnorm <- function(x, k=2, n.start=20, hard.assign=FALSE, maxiter=496, eps=1e-5){
+mix.spnorm <- function(x, k=2, n.start=20, maxiter=496, eps=1e-5){
   #-----------------------------------------------------------------------------------------
   ## Preprocessing 
   check_datamat(x)  # checking the datamatrix
@@ -15,7 +15,7 @@ mix.spnorm <- function(x, k=2, n.start=20, hard.assign=FALSE, maxiter=496, eps=1
   if (k<2){
     stop("* mix.spnorm : the number of clusters should be at least 2.")
   }
-  d = ncol(x) # S^{d-1) in R^p
+  d = ncol(x) # S^{d-1) in R^d
   old.cluster <- as.integer(as.vector(stats::kmeans(x, k, nstart=n.start)$cluster)) # initialize the label
   
   #-----------------------------------------------------------------------------------------

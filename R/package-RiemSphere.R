@@ -10,6 +10,7 @@
 #' @name RiemSphere
 #' @import Rdpack
 #' @import RiemBase
+#' @importFrom Directional mix.vmf
 #' @importFrom cluster pam
 #' @importFrom Bessel besselI.nuAsym besselIasym
 #' @importFrom DEoptim DEoptim DEoptim.control

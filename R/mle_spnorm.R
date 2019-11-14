@@ -360,10 +360,9 @@ lambda_method4 <- function(data, mean){
 # library(ggplot2)
 # library(microbenchmark)  # time comparison of multiple methods
 # lbdtime <- microbenchmark(
-#   deoptim = mle.spnorm(myx, method=1),
-#   statopt = mle.spnorm(myx, method=2),
-#   newton1 = mle.spnorm(myx, method=3), 
-#   newton2 = mle.spnorm(myx, method=4), times=20L
+#   deoptim = mle.spnorm(myx, method="Newton"),
+#   statopt = mle.spnorm(myx, method="Halley"),
+#   newton1 = mle.spnorm(myx, method="Optimize"), times=20L
 # )
 # autoplot(lbdtime)
 # 
