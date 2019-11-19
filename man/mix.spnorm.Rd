@@ -4,8 +4,7 @@
 \alias{mix.spnorm}
 \title{Mixture of Spherical Normal Distributions}
 \usage{
-mix.spnorm(x, k = 2, n.start = 20, hard.assign = FALSE,
-  maxiter = 496, eps = 1e-05)
+mix.spnorm(x, k = 2, n.start = 20, maxiter = 496, eps = 1e-05)
 }
 \description{
 Mixture of Spherical Normal Distributions

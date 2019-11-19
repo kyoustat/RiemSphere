@@ -3,7 +3,6 @@
 \docType{package}
 \name{RiemSphere}
 \alias{RiemSphere}
-\alias{RiemSphere-package}
 \title{Tools for Learning over Spheres}
 \description{
 Not Written Yet. what should I say. why not. testing.

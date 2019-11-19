@@ -2,13 +2,20 @@
 % Please edit documentation in R/sp.pdist.R
 \name{sp.pdist}
 \alias{sp.pdist}
-\title{Pairwise Distance}
+\title{Pairwise Distance of Data on Hypersphere}
 \usage{
-sp.pdist(x, mode = c("intrinsic", "extrinsic"), as.dist = FALSE)
+sp.pdist(x, type = c("intrinsic", "extrinsic"), as.dist = FALSE)
 }
 \arguments{
-\item{x}{(n x p) data matrix on S^{p-1}}
+\item{x}{an \eqn{(n\times p)} row-stacked matrix for \eqn{\mathbb{S}^{p-1}}.}
+
+\item{type}{type of distance, either \code{"intrinsic"} or \code{"extrinsic"}.}
+
+\item{as.dist}{a logical; \code{TRUE} to return an object of class \code{dist} or \code{FALSE} a symmetric matrix.}
+}
+\value{
+an \eqn{(n\times n)} matrix of pairwise distances or \code{dist} object.
 }
 \description{
-Pairwise Distance
+Pairwise Distance of Data on Hypersphere
 }

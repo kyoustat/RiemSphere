@@ -1,13 +1,13 @@
 #' Pairwise Distance of Data on Hypersphere
 #' 
 #' @param x an \eqn{(n\times p)} row-stacked matrix for \eqn{\mathbb{S}^{p-1}}.
-#' @param mode type of distance, either \code{"intrinsic"} or \code{"extrinsic"}.
+#' @param type type of distance, either \code{"intrinsic"} or \code{"extrinsic"}.
 #' @param as.dist a logical; \code{TRUE} to return an object of class \code{dist} or \code{FALSE} a symmetric matrix.
 #' 
 #' @return an \eqn{(n\times n)} matrix of pairwise distances or \code{dist} object.
 #' 
 #' @export
-sp.pdist <- function(x, mode=c("intrinsic","extrinsic"), as.dist=FALSE){
+sp.pdist <- function(x, type=c("intrinsic","extrinsic"), as.dist=FALSE){
   ############################################################
   # Preprocessing
   # 1. check the data matrix
@@ -15,13 +15,13 @@ sp.pdist <- function(x, mode=c("intrinsic","extrinsic"), as.dist=FALSE){
     stop("* sp.pdist : an input 'x' is not a row-stacked matrix of unit-norm vectors.")
   }
   # 2. check the mode
-  mode = match.arg(mode)
+  type = match.arg(type)
   # 3. parameters
   n = nrow(x)
   
   ############################################################
   # Computation
-  if (all(mode=="intrinsic")){
+  if (all(type=="intrinsic")){
     output = array(0,c(n,n))
     for (i in 1:(n-1)){
       tgt1 = as.vector(x[i,])
@@ -43,6 +43,42 @@ sp.pdist <- function(x, mode=c("intrinsic","extrinsic"), as.dist=FALSE){
     return(output)
   }
 }
+
+
+# internal ----------------------------------------------------------------
+#' @keywords internal
+#' @noRd
+sp.pdist.internal <- function(x, type=c("intrinsic","extrinsic"), as.dist=FALSE){
+  ############################################################
+  # Preprocessing
+  type = match.arg(type)
+  n = nrow(x)
+  
+  ############################################################
+  # Computation
+  if (all(type=="intrinsic")){
+    output = array(0,c(n,n))
+    for (i in 1:(n-1)){
+      tgt1 = as.vector(x[i,])
+      for (j in (i+1):n){
+        tgt2  = as.vector(x[j,])
+        logxy = aux_log(tgt1, tgt2)
+        output[i,j] <- output[j,i] <- sqrt(sum((logxy)^2))
+      }
+    }
+  } else {
+    output = as.matrix(stats::dist(x))
+  }
+  
+  ############################################################
+  # Report
+  if (as.dist){
+    return(stats::as.dist(output))
+  } else {
+    return(output)
+  }
+}
+
 
 # # Personalized Example
 # mykap = 10 # larger value, higher concentration

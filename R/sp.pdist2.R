@@ -2,11 +2,11 @@
 #' 
 #' @param x1 an \eqn{(m\times p)} row-stacked matrix for \eqn{\mathbb{S}^{p-1}}.
 #' @param x2 an \eqn{(n\times p)} row-stacked matrix for \eqn{\mathbb{S}^{p-1}}.
-#' @param mode type of distance, either \code{"intrinsic"} or \code{"extrinsic"}.
+#' @param type type of distance, either \code{"intrinsic"} or \code{"extrinsic"}.
 #' 
 #' @return an \eqn{(m \times n)} matrix of cross distances between \code{x1} and \code{x2}.
 #' @export
-sp.pdist2 <- function(x1, x2, mode=c("intrinsic","extrinsic")){
+sp.pdist2 <- function(x1, x2, type=c("intrinsic","extrinsic")){
   ############################################################
   # Preprocessing
   # 1. check the data matrix
@@ -20,16 +20,16 @@ sp.pdist2 <- function(x1, x2, mode=c("intrinsic","extrinsic")){
     stop("* sp.pdist2 : two inputs 'x1' and 'x2' should have same number of columns.")
   }
   # 2. check the mode
-  mode = match.arg(mode)
+  type = match.arg(type)
   # 3. parameters
   m = base::nrow(x1)
   n = base::nrow(x2)
   
   ############################################################
   # Computation
-  if (all(mode=="intrinsic")){
+  if (all(type=="intrinsic")){
     outmat = aux_dist_MtoN(x1, x2)
-  } else if (all(mode=="extrinsic")){
+  } else if (all(type=="extrinsic")){
     outmat = array(0,c(m,n))
     for (i in 1:m){
       tgti = as.vector(x1[i,])
