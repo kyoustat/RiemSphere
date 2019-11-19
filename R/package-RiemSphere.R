@@ -8,8 +8,9 @@
 #' 
 #' @docType package
 #' @name RiemSphere
-#' @import Rdpack
 #' @import RiemBase
+#' @importFrom Rdpack reprompt
+#' @importFrom DAS cmds
 #' @importFrom RiemBaseExt rclust.kmedoids
 #' @importFrom Directional mix.vmf
 #' @importFrom cluster pam

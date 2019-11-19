@@ -21,26 +21,51 @@ sp.pdist2 <- function(x1, x2, type=c("intrinsic","extrinsic")){
   }
   # 2. check the mode
   type = match.arg(type)
-  # 3. parameters
-  m = base::nrow(x1)
-  n = base::nrow(x2)
+
   
   ############################################################
   # Computation
   if (all(type=="intrinsic")){
-    outmat = aux_dist_MtoN(x1, x2)
+    # outmat = aux_dist_MtoN(x1, x2)
+    outmat = cppdist_int_MtoN(x1, x2)
   } else if (all(type=="extrinsic")){
-    outmat = array(0,c(m,n))
-    for (i in 1:m){
-      tgti = as.vector(x1[i,])
-      for (j in 1:n){
-        tgtj = as.vector(x2[j,])
-        outmat[i,j] = sqrt(sum((tgti-tgtj)^2))
-      }
-    }
+    output = cppdist_ext_MtoN(x1, x2)
   }
   
   ############################################################
   # Report
   return(outmat)
 }
+
+
+# internal function -------------------------------------------------------
+#' @keywords internal
+#' @noRd
+sp.pdist2.internal <- function(x1, x2, type=c("intrinsic","extrinsic")){
+  ############################################################
+  # Preprocessing
+  type = match.arg(type)
+  
+  ############################################################
+  # Computation
+  if (all(type=="intrinsic")){
+    # outmat = aux_dist_MtoN(x1, x2)
+    outmat = cppdist_int_MtoN(x1, x2)
+  } else if (all(type=="extrinsic")){
+    output = cppdist_ext_MtoN(x1, x2)
+  }
+  
+  ############################################################
+  # Report
+  return(outmat)
+}
+
+
+# # Personalized Example
+# mykap = 10 # larger value, higher concentration
+# mymu1 = c(0,0,0,1)
+# mymu2 = c(-1,0,0,0)
+# x1 = rvmf(500,mymu1,kappa=mykap)
+# x2 = rvmf(1000,mymu2,kappa=mykap)
+# 
+# output = sp.pdist2(x1, x1, type="intrinsic")

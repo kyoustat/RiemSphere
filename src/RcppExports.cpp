@@ -6,6 +6,52 @@
 
 using namespace Rcpp;
 
+// cppdist_int_MtoN
+arma::mat cppdist_int_MtoN(arma::mat& X, arma::mat& Y);
+RcppExport SEXP _RiemSphere_cppdist_int_MtoN(SEXP XSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppdist_int_MtoN(X, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cppdist_ext_MtoN
+arma::mat cppdist_ext_MtoN(arma::mat& X, arma::mat& Y);
+RcppExport SEXP _RiemSphere_cppdist_ext_MtoN(SEXP XSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppdist_ext_MtoN(X, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cppdist_pair_int
+arma::mat cppdist_pair_int(arma::mat& X);
+RcppExport SEXP _RiemSphere_cppdist_pair_int(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppdist_pair_int(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cppdist_pair_ext
+arma::mat cppdist_pair_ext(arma::mat& X);
+RcppExport SEXP _RiemSphere_cppdist_pair_ext(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppdist_pair_ext(X));
+    return rcpp_result_gen;
+END_RCPP
+}
 // engine_wmean
 Rcpp::List engine_wmean(arma::cube data, std::string name, int maxiter, double eps, arma::vec weights);
 RcppExport SEXP _RiemSphere_engine_wmean(SEXP dataSEXP, SEXP nameSEXP, SEXP maxiterSEXP, SEXP epsSEXP, SEXP weightsSEXP) {
@@ -40,6 +86,10 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_RiemSphere_cppdist_int_MtoN", (DL_FUNC) &_RiemSphere_cppdist_int_MtoN, 2},
+    {"_RiemSphere_cppdist_ext_MtoN", (DL_FUNC) &_RiemSphere_cppdist_ext_MtoN, 2},
+    {"_RiemSphere_cppdist_pair_int", (DL_FUNC) &_RiemSphere_cppdist_pair_int, 1},
+    {"_RiemSphere_cppdist_pair_ext", (DL_FUNC) &_RiemSphere_cppdist_pair_ext, 1},
     {"_RiemSphere_engine_wmean", (DL_FUNC) &_RiemSphere_engine_wmean, 5},
     {"_RiemSphere_rvmf_h", (DL_FUNC) &_RiemSphere_rvmf_h, 7},
     {NULL, NULL, 0}

@@ -1,7 +1,7 @@
 #' MLE for SPNORM
 #' 
 #' @export
-mle.spnorm <- function(x, method=c("Newton","Halley","Optimize")){
+mle.spnorm <- function(x, method=c("DE","Newton","Halley","Optimize")){
   ########################################################################
   ## PREPROCESSING : check data
   check_datamat(x)
@@ -9,7 +9,7 @@ mle.spnorm <- function(x, method=c("Newton","Halley","Optimize")){
     stop("* mle.spnorm : computing MLE requires more than one observations.")
   }
   method = tolower(method)
-  alldip = c("newton","halley","optimize")
+  alldip = c("newton","halley","optimize","de")
   method = match.arg(method, alldip)
   
   ########################################################################
@@ -19,9 +19,10 @@ mle.spnorm <- function(x, method=c("Newton","Halley","Optimize")){
   ########################################################################
   ## STEP 2. optimal lambda can be computed ?
   opt.lambda = switch (method,
-    "optimize" = lambda_method2(x, opt.mean), # optimize function
-    "newton"   = lambda_method3(x, opt.mean), # numerical newton
-    "halley"   = lambda_method4(x, opt.mean)
+                       "de" = lambda_method1(x, opt.mean),
+                       "optimize" = lambda_method2(x, opt.mean), # optimize function
+                       "newton"   = lambda_method3(x, opt.mean), # numerical newton
+                       "halley"   = lambda_method4(x, opt.mean)
   )
   
   ########################################################################

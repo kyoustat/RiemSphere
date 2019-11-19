@@ -22,17 +22,9 @@ sp.pdist <- function(x, type=c("intrinsic","extrinsic"), as.dist=FALSE){
   ############################################################
   # Computation
   if (all(type=="intrinsic")){
-    output = array(0,c(n,n))
-    for (i in 1:(n-1)){
-      tgt1 = as.vector(x[i,])
-      for (j in (i+1):n){
-        tgt2  = as.vector(x[j,])
-        logxy = aux_log(tgt1, tgt2)
-        output[i,j] <- output[j,i] <- sqrt(sum((logxy)^2))
-      }
-    }
+    output = cppdist_pair_int(x)
   } else {
-    output = as.matrix(stats::dist(x))
+    output = cppdist_pair_ext(x)
   }
   
   ############################################################
@@ -57,17 +49,9 @@ sp.pdist.internal <- function(x, type=c("intrinsic","extrinsic"), as.dist=FALSE)
   ############################################################
   # Computation
   if (all(type=="intrinsic")){
-    output = array(0,c(n,n))
-    for (i in 1:(n-1)){
-      tgt1 = as.vector(x[i,])
-      for (j in (i+1):n){
-        tgt2  = as.vector(x[j,])
-        logxy = aux_log(tgt1, tgt2)
-        output[i,j] <- output[j,i] <- sqrt(sum((logxy)^2))
-      }
-    }
+    output = cppdist_pair_int(x)
   } else {
-    output = as.matrix(stats::dist(x))
+    output = cppdist_pair_ext(x)
   }
   
   ############################################################
@@ -88,8 +72,8 @@ sp.pdist.internal <- function(x, type=c("intrinsic","extrinsic"), as.dist=FALSE)
 # x2 = rvmf(50,mymu2,kappa=mykap)
 # XX = rbind(x1,x2)
 # 
-# out.int = RiemSphere::pdist(XX, mode="intrinsic")
-# out.ext = RiemSphere::pdist(XX, mode="extrinsic")
+# out.int = RiemSphere::sp.pdist(XX, type="intrinsic")
+# out.ext = RiemSphere::sp.pdist(XX, type="extrinsic")
 # par(mfrow=c(1,2), pty="s")
 # image(out.int[,nrow(out.int):1], main="intrinsic")
 # image(out.ext[,nrow(out.ext):1], main="extrinsic")
