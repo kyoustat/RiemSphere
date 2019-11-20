@@ -1,4 +1,4 @@
-#' Multidimensional Scaling on Sphere
+#' Multidimensional Scaling on Hypersphere
 #' 
 #' 
 #' @examples 
@@ -15,7 +15,7 @@
 #' plot(mds2d$embed[,1], mds2d$embed[,2], pch=19)
 #' 
 #' @references 
-#' \insertRef{torgerson_multidimensional_1952}{DAS}
+#' \insertRef{torgerson_multidimensional_1952}{RiemSphere}
 #' 
 #' @export
 sp.mds <- function(x, ndim=2, type=c("intrinsic","extrinsic")){

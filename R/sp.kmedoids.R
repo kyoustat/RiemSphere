@@ -1,4 +1,4 @@
-#' k-Medoids Clustering on Hypersphere
+#' k-Medoids Clustering for Data on Hypersphere
 #' 
 #' @examples 
 #' ## generate two-cluster data
@@ -21,9 +21,9 @@
 #' 
 #' ## compare via visualization
 #' opar  <- par(mfrow=c(1,3), pty="s")
-#' plot(mdsx, mdsy, col=cl2$clustering, main="k=2 medoids", pch=19)
-#' plot(mdsx, mdsy, col=cl3$clustering, main="k=3 medoids", pch=19)
-#' plot(mdsx, mdsy, col=cl4$clustering, main="k=4 medoids", pch=19)
+#' plot(mdsx, mdsy, col=cl2$cluster, main="k=2 medoids", pch=19)
+#' plot(mdsx, mdsy, col=cl3$cluster, main="k=3 medoids", pch=19)
+#' plot(mdsx, mdsy, col=cl4$cluster, main="k=4 medoids", pch=19)
 #' par(opar)
 #' 
 #' 
@@ -40,6 +40,12 @@ sp.kmedoids <- function(x, k=2, type=c("intrinsic","extrinsic")){
   ############################################################
   # Compute Pairwise Distances and do PAM
   dmat   = sp.pdist.internal(x, type=mytype, as.dist=TRUE)
-  output = RiemBaseExt::rclust.kmedoids(dmat, k=myk)
+  tmprun = RiemBaseExt::rclust.kmedoids(dmat, k=myk)
+  
+  ############################################################
+  # Recap
+  output = list()
+  output$cluster = tmprun$clustering
+  output$medoids = x[tmprun$id.med,]
   return(output)
 }

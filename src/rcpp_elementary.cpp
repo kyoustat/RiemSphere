@@ -11,6 +11,7 @@ using namespace arma;
  * (2) cppdist_ext_MtoN
  * (3) cppdist_pair_int
  * (4) cppdist_pair_ext
+ * (5) cppdist_int_1toN
  */
 
 // (1) cppdist_int_MtoN cppdist_pair_int
@@ -119,5 +120,30 @@ arma::mat cppdist_pair_ext(arma::mat &X){
       output(n,m) = dval;
     }
   }
+  return(output);
+}
+
+// (5) cppdist_int_1toN
+//[[Rcpp::export]]
+arma::vec cppdist_int_1toN(arma::vec x, arma::mat &Y){
+  // parameters
+  int N = Y.n_rows;
+  
+  // preliminary
+  arma::vec output(N,fill::zeros);
+  arma::rowvec xvec = x.t();
+  arma::rowvec yvec;
+  
+  // iteration
+  for (int n=0;n<N;n++){
+    yvec = Y.row(n);
+    if (arma::norm(xvec-yvec,2) > 1e-10){
+      output(n) = acos(arma::dot(xvec, yvec));  
+    } else {
+      output(n) = 0;
+    }
+  }
+
+  // return
   return(output);
 }

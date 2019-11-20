@@ -193,7 +193,7 @@ aux_wfrechet <- function(dat, weight=rep(1,nrow(dat))/nrow(dat)){
   newdata = aux_stack3d(rdat)  # arg 1. 
   mfdname = tolower(rdat$name) # arg 2.
   
-  output  = engine_wmean(newdata, mfdname, as.integer(maxiter), as.double(eps), weight)
+  output  = as.vector(engine_wmean(newdata, mfdname, as.integer(maxiter), as.double(eps), weight)$x)
   return(output)
 }
 # TEST 1. rbase.mean may be incorrect

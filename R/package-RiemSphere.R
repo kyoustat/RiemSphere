@@ -9,9 +9,9 @@
 #' @docType package
 #' @name RiemSphere
 #' @import RiemBase
-#' @importFrom Rdpack reprompt
+#' @import Rdpack
 #' @importFrom DAS cmds
-#' @importFrom RiemBaseExt rclust.kmedoids
+#' @importFrom RiemBaseExt rclust.kmedoids rclust.hclust rclust.dbscan
 #' @importFrom Directional mix.vmf
 #' @importFrom cluster pam
 #' @importFrom Bessel besselI.nuAsym besselIasym

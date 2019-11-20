@@ -2,9 +2,7 @@ Package: RiemSphere
 Type: Package
 Title: What the package doesas
 Version: 0.1.0
-Date: 2019-05-21
-Author: Who wrote it
-Maintainer: Who to complain to <yourfaultd@somewhere.net>
+Authors@R: c(person("Kisung", "You", role = c("aut", "cre"), email = "kyoustat@gmail.com",comment=c(ORCID="0000-0002-8584-459X")))
 Description: More about what it doesas
 License: GPL (>=3)
 Encoding: UTF-8

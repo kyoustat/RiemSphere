@@ -271,13 +271,14 @@ lambda_method4 <- function(data, mean){
 
 
 
-# # COMPARE THREE METHODS
+# COMPARE THREE METHODS
 # myp   = 5
 # mylbd = stats::runif(1, min=0.0001, max=15)
 # myn   = 2000
 # mymu  = rnorm(myp)
 # mymu  = mymu/sqrt(sum(mymu^2))
 # myx   = RiemSphere::rspnorm(myn, mymu, lambda=mylbd)
+# mle.spnorm(myx, method="dE")
 # mle.spnorm(myx, method="newton")
 # mle.spnorm(myx, method="halley")
 # mle.spnorm(myx, method="optimize")

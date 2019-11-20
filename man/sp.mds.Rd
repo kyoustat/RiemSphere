@@ -2,12 +2,12 @@
 % Please edit documentation in R/sp.mds.R
 \name{sp.mds}
 \alias{sp.mds}
-\title{Multidimensional Scaling on Sphere}
+\title{Multidimensional Scaling on Hypersphere}
 \usage{
 sp.mds(x, ndim = 2, type = c("intrinsic", "extrinsic"))
 }
 \description{
-Multidimensional Scaling on Sphere
+Multidimensional Scaling on Hypersphere
 }
 \examples{
 ## generate two-cluster data
@@ -24,5 +24,5 @@ plot(mds2d$embed[,1], mds2d$embed[,2], pch=19)
 
 }
 \references{
-\insertRef{torgerson_multidimensional_1952}{DAS}
+\insertRef{torgerson_multidimensional_1952}{RiemSphere}
 }

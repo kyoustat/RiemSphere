@@ -2,12 +2,12 @@
 % Please edit documentation in R/sp.kmedoids.R
 \name{sp.kmedoids}
 \alias{sp.kmedoids}
-\title{k-Medoids Clustering on Hypersphere}
+\title{k-Medoids Clustering for Data on Hypersphere}
 \usage{
 sp.kmedoids(x, k = 2, type = c("intrinsic", "extrinsic"))
 }
 \description{
-k-Medoids Clustering on Hypersphere
+k-Medoids Clustering for Data on Hypersphere
 }
 \examples{
 ## generate two-cluster data
@@ -30,9 +30,9 @@ mdsy  <- mds2d$embed[,2]
 
 ## compare via visualization
 opar  <- par(mfrow=c(1,3), pty="s")
-plot(mdsx, mdsy, col=cl2$clustering, main="k=2 medoids", pch=19)
-plot(mdsx, mdsy, col=cl3$clustering, main="k=3 medoids", pch=19)
-plot(mdsx, mdsy, col=cl4$clustering, main="k=4 medoids", pch=19)
+plot(mdsx, mdsy, col=cl2$cluster, main="k=2 medoids", pch=19)
+plot(mdsx, mdsy, col=cl3$cluster, main="k=3 medoids", pch=19)
+plot(mdsx, mdsy, col=cl4$cluster, main="k=4 medoids", pch=19)
 par(opar)
 
 

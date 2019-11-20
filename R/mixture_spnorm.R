@@ -4,7 +4,9 @@
 mix.spnorm <- function(x, k=2, n.start=20, maxiter=496, eps=1e-5){
   #-----------------------------------------------------------------------------------------
   ## Preprocessing 
-  check_datamat(x)  # checking the datamatrix
+  if (!check_datamat(x)){
+    stop("* mix.spnorm : input data should consist of at least two points on the unitsphere.")
+  }
   if (is.vector(x)||(nrow(x)==1)){
     stop("* mix.spnorm : input data should consist of at least two points on the unitsphere.")
   }

@@ -52,6 +52,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cppdist_int_1toN
+arma::vec cppdist_int_1toN(arma::vec x, arma::mat& Y);
+RcppExport SEXP _RiemSphere_cppdist_int_1toN(SEXP xSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(cppdist_int_1toN(x, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // engine_wmean
 Rcpp::List engine_wmean(arma::cube data, std::string name, int maxiter, double eps, arma::vec weights);
 RcppExport SEXP _RiemSphere_engine_wmean(SEXP dataSEXP, SEXP nameSEXP, SEXP maxiterSEXP, SEXP epsSEXP, SEXP weightsSEXP) {
@@ -90,6 +102,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_RiemSphere_cppdist_ext_MtoN", (DL_FUNC) &_RiemSphere_cppdist_ext_MtoN, 2},
     {"_RiemSphere_cppdist_pair_int", (DL_FUNC) &_RiemSphere_cppdist_pair_int, 1},
     {"_RiemSphere_cppdist_pair_ext", (DL_FUNC) &_RiemSphere_cppdist_pair_ext, 1},
+    {"_RiemSphere_cppdist_int_1toN", (DL_FUNC) &_RiemSphere_cppdist_int_1toN, 2},
     {"_RiemSphere_engine_wmean", (DL_FUNC) &_RiemSphere_engine_wmean, 5},
     {"_RiemSphere_rvmf_h", (DL_FUNC) &_RiemSphere_rvmf_h, 7},
     {NULL, NULL, 0}

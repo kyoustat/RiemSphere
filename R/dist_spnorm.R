@@ -26,7 +26,9 @@ dspnorm <- function(x, mu, lambda=1, log = FALSE){
   # 2. lambda 
   check_num_nonneg(lambda)
   # 3. check data
-  check_datamat(x)
+  if (!check_datamat(x)){
+    stop("* asdf")
+  }
   
   ## EVALUATION
   #   1. normalizing constant
@@ -36,12 +38,15 @@ dspnorm <- function(x, mu, lambda=1, log = FALSE){
     logmux = aux_log(mu, x)
     output = exp(-(lambda/2)*sum(logmux*logmux))
   } else {
-    nx     = nrow(x)
-    output = rep(0,nx)
-    for (i in 1:nx){
-      logmux = aux_log(mu, as.vector(x[i,]))
-      output[i] = exp(-(lambda/2)*sum(logmux*logmux))
-    }
+    dvec   = as.vector(cppdist_int_1toN(mu, x));
+    output = exp((-lambda/2)*(dvec^2))
+    
+    # nx     = nrow(x)
+    # output = rep(0,nx)
+    # for (i in 1:nx){
+    #   logmux = aux_log(mu, as.vector(x[i,]))
+    #   output[i] = exp(-(lambda/2)*sum(logmux*logmux))
+    # }
   }
   #   3. scale by normalizing constant and RETURN
   if (log){
