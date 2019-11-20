@@ -12,7 +12,21 @@
 #' xx = rbind(x1,x2,x3)
 #' 
 #' ## apply clustering with different k values
-#' sp.mixnorm(xx, k=2)
+#' mix2 <- sp.kmeans(xx, k=2)
+#' mix3 <- sp.kmeans(xx, k=3)
+#' mix4 <- sp.kmeans(xx, k=4)
+#' 
+#' ## compute 2-dimensional embedding for visualization
+#' mds2d <- sp.mds(xx, ndim=2)
+#' mdsx  <- mds2d$embed[,1]
+#' mdsy  <- mds2d$embed[,2]
+#' 
+#' ## compare via visualization
+#' opar  <- par(mfrow=c(1,3), pty="s")
+#' plot(mdsx, mdsy, col=mix2$cluster, main="k=2 means", pch=19)
+#' plot(mdsx, mdsy, col=mix3$cluster, main="k=3 means", pch=19)
+#' plot(mdsx, mdsy, col=mix4$cluster, main="k=4 means", pch=19)
+#' par(opar)
 #' 
 #' @export
 sp.mixnorm <- function(x, k=2, n.start=5, maxiter=496, same.lambda=TRUE){
@@ -78,6 +92,13 @@ sp.mixnorm <- function(x, k=2, n.start=5, maxiter=496, same.lambda=TRUE){
     loglkd.old = loglkd.new
     print(paste("iteration ",it," with loglkd ",loglkd.old,sep=""))
   }
+  
+  ###################################################################
+  # Return
+  output = list()
+  output$cluster = mixnorm.extract.label(par.eta) # clutering label
+  
+  return(output)
 }
 
 
@@ -160,4 +181,22 @@ mixnorm.loglkd <- function(x, par.mu, par.lambda, par.pi){
     output = output + sum(as.vector(dspnorm(x, as.vector(par.mu[k,]), lambda=par.lambda[k], log = TRUE)))
   }
   return(output)
+}
+#' 5. extract cluster label
+#' @keywords internal
+#' @noRd
+mixnorm.extract.label = function(eta){
+  nn = nrow(eta)
+  kk = ncol(eta)
+  
+  lvec = rep(0,nn)
+  for (n in 1:nn){
+    idmins = which.min(as.vector(eta[n,]))
+    if (length(idmins)==1){
+      lvec[n] = idmins
+    } else {
+      lvec[n] = base::sample(idmins, 1)
+    }
+  }
+  return(lvec)
 }

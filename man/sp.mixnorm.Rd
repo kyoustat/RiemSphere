@@ -21,6 +21,20 @@ x3 = rvmf(50, mymu3, kappa=10)
 xx = rbind(x1,x2,x3)
 
 ## apply clustering with different k values
-sp.mixnorm(xx, k=2)
+mix2 <- sp.kmeans(xx, k=2)
+mix3 <- sp.kmeans(xx, k=3)
+mix4 <- sp.kmeans(xx, k=4)
+
+## compute 2-dimensional embedding for visualization
+mds2d <- sp.mds(xx, ndim=2)
+mdsx  <- mds2d$embed[,1]
+mdsy  <- mds2d$embed[,2]
+
+## compare via visualization
+opar  <- par(mfrow=c(1,3), pty="s")
+plot(mdsx, mdsy, col=mix2$cluster, main="k=2 means", pch=19)
+plot(mdsx, mdsy, col=mix3$cluster, main="k=3 means", pch=19)
+plot(mdsx, mdsy, col=mix4$cluster, main="k=4 means", pch=19)
+par(opar)
 
 }
