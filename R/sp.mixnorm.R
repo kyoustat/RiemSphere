@@ -116,7 +116,7 @@ sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lamb
   ###################################################################
   # Return
   output = list()
-  output$cluster  = mixnorm.extract.label(par.eta) # 1. clutering label
+  output$cluster  = base::apply(par.eta, 1, which.max)
   output$loglkd   = loglkd.old  # max loglkd
   output$criteria = infov       # min AIC/AICc/BIC/HQIC
   output$parameters = list(pro=par.pi, centers=par.mu, concentration=par.lambda)
@@ -204,22 +204,4 @@ mixnorm.loglkd <- function(x, par.mu, par.lambda, par.pi){
     output = output + sum(as.vector(dspnorm(x, as.vector(par.mu[k,]), lambda=par.lambda[k], log = TRUE)))
   }
   return(output)
-}
-#' 5. extract cluster label
-#' @keywords internal
-#' @noRd
-mixnorm.extract.label = function(eta){
-  nn = nrow(eta)
-  kk = ncol(eta)
-  
-  lvec = rep(0,nn)
-  for (n in 1:nn){
-    idmins = which.min(as.vector(eta[n,]))
-    if (length(idmins)==1){
-      lvec[n] = idmins
-    } else {
-      lvec[n] = base::sample(idmins, 1)
-    }
-  }
-  return(lvec)
 }
