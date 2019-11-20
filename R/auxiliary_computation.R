@@ -60,7 +60,12 @@ aux_exp <- function(x, d){
 #' @keywords internal
 #' @noRd
 aux_intmean <- function(myx){
-  return(as.vector(aux_wfrechet(myx)$x))
+  output = aux_wfrechet(myx) 
+  if (is.list(output)){
+    return(as.vector(output$x))
+  } else {
+    return(as.vector(output))
+  }
 }
 
 

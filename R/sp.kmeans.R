@@ -2,7 +2,7 @@
 #' 
 #' @param x an \eqn{(n\times p)} row-stacked matrix for \eqn{\mathbb{S}^{p-1}}.
 #' @param k the number of clusters to be found.
-#' @param n.start the number of random starting-point configurations.
+#' @param init method for setting initial configuration. \code{"random"} or \code{"kmeans"}.
 #' @param maxiter maximum number of iterations to be run.
 #' @param type type of distance, either \code{"intrinsic"} or \code{"extrinsic"}.
 #' 
@@ -38,7 +38,7 @@
 #' par(opar)
 #' 
 #' @export
-sp.kmeans <- function(x, k=2, n.start=5, maxiter = 100, type=c("intrinsic","extrinsic")){
+sp.kmeans <- function(x, k=2, init=c("kmeans","random"), maxiter = 100, type=c("intrinsic","extrinsic")){
   ############################################################
   # Preprocessing
   if (!check_datamat(x)){
@@ -48,10 +48,15 @@ sp.kmeans <- function(x, k=2, n.start=5, maxiter = 100, type=c("intrinsic","extr
   myk     = round(k)  # desired number of clusters
   mytype  = match.arg(type)
   maxiter = round(maxiter)
+  myinit  = match.arg(init)
   
   ############################################################
   # Initialize
-  label.old  = stats::kmeans(x, myk, nstart=round(n.start))$cluster # label
+  if (all(myinit=="random")){
+    label.old = sample(c(1:myk, sample(1:myk, myn-myk, replace = TRUE)))
+  } else {
+    label.old  = stats::kmeans(x, myk, nstart=round(5))$cluster # label  
+  }
   if (aux_strcmp(mytype, "intrinsic")){
     center.old = sp.kmeans.center.int(x, label.old, myk)
   } else {

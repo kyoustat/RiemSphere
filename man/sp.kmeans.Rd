@@ -7,7 +7,7 @@
 sp.kmeans(
   x,
   k = 2,
-  n.start = 5,
+  init = c("kmeans", "random"),
   maxiter = 100,
   type = c("intrinsic", "extrinsic")
 )
@@ -17,7 +17,7 @@ sp.kmeans(
 
 \item{k}{the number of clusters to be found.}
 
-\item{n.start}{the number of random starting-point configurations.}
+\item{init}{method for setting initial configuration. \code{"random"} or \code{"kmeans"}.}
 
 \item{maxiter}{maximum number of iterations to be run.}
 

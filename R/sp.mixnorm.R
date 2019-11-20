@@ -2,19 +2,17 @@
 #' 
 #' @examples 
 #' ## generate two-cluster data
-#' mymu1 = c(0,0,0,1)  # center of class 1
-#' mymu2 = c(-1,0,0,0) # center of class 2
-#' mymu3 = c(0,1,0,0)  # center of class 3
+#' mymu1 = c(0,0,0,1)        # center of class 1
+#' mymu2 = c(-1,0,0,0)       # center of class 2
 #' 
 #' x1 = rvmf(50, mymu1, kappa=10)
 #' x2 = rvmf(50, mymu2, kappa=10)
-#' x3 = rvmf(50, mymu3, kappa=10)
-#' xx = rbind(x1,x2,x3)
+#' xx = rbind(x1,x2)
 #' 
 #' ## apply clustering with different k values
-#' mix2 <- sp.kmeans(xx, k=2)
-#' mix3 <- sp.kmeans(xx, k=3)
-#' mix4 <- sp.kmeans(xx, k=4)
+#' mix2 <- sp.mixnorm(xx, k=2)
+#' mix3 <- sp.mixnorm(xx, k=3)
+#' mix4 <- sp.mixnorm(xx, k=4)
 #' 
 #' ## compute 2-dimensional embedding for visualization
 #' mds2d <- sp.mds(xx, ndim=2)
@@ -23,13 +21,13 @@
 #' 
 #' ## compare via visualization
 #' opar  <- par(mfrow=c(1,3), pty="s")
-#' plot(mdsx, mdsy, col=mix2$cluster, main="k=2 means", pch=19)
-#' plot(mdsx, mdsy, col=mix3$cluster, main="k=3 means", pch=19)
-#' plot(mdsx, mdsy, col=mix4$cluster, main="k=4 means", pch=19)
+#' plot(mdsx, mdsy, col=mix2$cluster, main="k=2 mixture", pch=19)
+#' plot(mdsx, mdsy, col=mix3$cluster, main="k=3 mixture", pch=19)
+#' plot(mdsx, mdsy, col=mix4$cluster, main="k=4 mixture", pch=19)
 #' par(opar)
 #' 
 #' @export
-sp.mixnorm <- function(x, k=2, n.start=5, maxiter=496, same.lambda=TRUE){
+sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lambda=TRUE){
   ###################################################################
   ## Preprocessing 
   if (!check_datamat(x)){
@@ -40,6 +38,7 @@ sp.mixnorm <- function(x, k=2, n.start=5, maxiter=496, same.lambda=TRUE){
   myp = ncol(x)
   myk = round(k)
   myiter = round(maxiter)
+  myinit = match.arg(init)
   
   if (myk >= (myn-1)){
     stop("* sp.mixnorm : the number of clusters is too big. Try with a smaller number.")
@@ -50,7 +49,11 @@ sp.mixnorm <- function(x, k=2, n.start=5, maxiter=496, same.lambda=TRUE){
   
   ###################################################################
   ## Initialize all the parameters
-  initlabel   <- (as.vector(stats::kmeans(x, k, nstart=n.start)$cluster)) # initialize the label
+  if (all(myinit=="random")){
+    initlabel = sample(c(1:myk, sample(1:myk, myn-myk, replace = TRUE)))
+  } else {
+    initlabel = stats::kmeans(x, myk, nstart=round(5))$cluster # label  
+  }
   par.eta <- array(0,c(myn,myk))
   for (i in 1:myn){
     par.eta[i,initlabel[i]] = 1
@@ -85,19 +88,39 @@ sp.mixnorm <- function(x, k=2, n.start=5, maxiter=496, same.lambda=TRUE){
     #   M3. mu / centers
     par.mu = mixnorm.frechet(x, par.eta)
     #   Mextra for computing log-likelihood
-    loglkd.new = mixnorm.loglkd(x, par.mu, par.lambda, par.pi)
-    
-    
+    loglkd.new  = mixnorm.loglkd(x, par.mu, par.lambda, par.pi)
+    loglkd.diff = loglkd.new - loglkd.old
     # iteration over
     loglkd.old = loglkd.new
-    print(paste("iteration ",it," with loglkd ",loglkd.old,sep=""))
+    if ((it > 5)&&(loglkd.diff <= 0)){
+      break
+    }
   }
+  
+  ###################################################################
+  # Information Criterion
+  if (same.lambda){
+    par.k = ((myp-1)*myk) + myk + (myk-1)  
+  } else {
+    par.k = ((myp-1)*myk) + 1   + (myk-1)  
+  }
+  AIC = -2*loglkd.old + 2*par.k
+  BIC = -2*loglkd.old + par.k*log(myn)
+  HQIC = -2*loglkd.old + 2*par.k*log(log(myn))
+  AICc = AIC + (2*(par.k^2) + 2*par.k)/(myn-par.k-1)
+  
+  infov = matrix(c(AIC, AICc, BIC, HQIC), nrow=1)
+  colnames(infov) = c("AIC","AICc","BIC","HQIC")
+  
   
   ###################################################################
   # Return
   output = list()
-  output$cluster = mixnorm.extract.label(par.eta) # clutering label
-  
+  output$cluster  = mixnorm.extract.label(par.eta) # 1. clutering label
+  output$loglkd   = loglkd.old  # max loglkd
+  output$criteria = infov       # min AIC/AICc/BIC/HQIC
+  output$parameters = list(pro=par.pi, centers=par.mu, concentration=par.lambda)
+  output$membership = par.eta
   return(output)
 }
 
