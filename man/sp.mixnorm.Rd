@@ -9,7 +9,8 @@ sp.mixnorm(
   k = 2,
   init = c("kmeans", "random"),
   maxiter = 496,
-  same.lambda = TRUE
+  same.lambda = TRUE,
+  version = c("soft", "hard", "stochastic")
 )
 }
 \description{

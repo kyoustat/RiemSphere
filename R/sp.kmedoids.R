@@ -36,7 +36,7 @@ sp.kmedoids <- function(x, k=2, type=c("intrinsic","extrinsic")){
   }
   myk    = round(k)
   mytype = match.arg(type)
-  
+
   ############################################################
   # Compute Pairwise Distances and do PAM
   dmat   = sp.pdist.internal(x, type=mytype, as.dist=TRUE)

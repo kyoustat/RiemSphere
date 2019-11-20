@@ -70,15 +70,8 @@ sp.kmeans <- function(x, k=2, init=c("kmeans","random"), maxiter = 100, type=c("
     # A-1. compute pairwise distance (N x K)
     pdmat = sp.pdist2.internal(x, center.old, type=mytype)
     # A-2. class assignment
-    label.new = rep(0,myn)
-    for (i in 1:myn){
-      idmins = which.min(as.vector(pdmat[i,]))
-      if (length(idmins)==1){
-        label.new[i] = idmins
-      } else {
-        label.new[i] = base::sample(idmins, 1)
-      }
-    }
+    label.new = base::apply(pdmat, 1, which.min)
+
     # Update Step
     if (aux_strcmp(mytype, "intrinsic")){
       center.new = sp.kmeans.center.int(x, label.new, myk)

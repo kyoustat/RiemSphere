@@ -27,7 +27,8 @@
 #' par(opar)
 #' 
 #' @export
-sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lambda=TRUE){
+sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lambda=TRUE, 
+                       version=c("soft","hard","stochastic")){
   ###################################################################
   ## Preprocessing 
   if (!check_datamat(x)){
@@ -39,6 +40,7 @@ sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lamb
   myk = round(k)
   myiter = round(maxiter)
   myinit = match.arg(init)
+  myvers = match.arg(version)
   
   if (myk >= (myn-1)){
     stop("* sp.mixnorm : the number of clusters is too big. Try with a smaller number.")
@@ -73,6 +75,14 @@ sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lamb
   for (it in 1:myiter){
     # E-Step
     par.eta = mixnorm.eta(x, par.mu, par.lambda, par.pi)
+    
+    # H/S-Step by Option
+    if (aux_strcmp(myvers, "hard")){
+      par.eta = mixnorm.hard(par.eta)
+    } else if (aux_strcmp(myvers, "stochastic")){
+      par.eta = mixnorm.stochastic(par.eta)
+    }
+    
     
     # M-Step Parameter Update
     #   Preliminary. d2mat
@@ -202,6 +212,32 @@ mixnorm.loglkd <- function(x, par.mu, par.lambda, par.pi){
   output = 0
   for (k in 1:kk){
     output = output + sum(as.vector(dspnorm(x, as.vector(par.mu[k,]), lambda=par.lambda[k], log = TRUE)))
+  }
+  return(output)
+}
+#' 5. version 'hard' 
+#' @keywords internal
+#' @noRd
+mixnorm.hard <- function(eta){
+  n = nrow(eta)
+  p = ncol(eta)
+  idmax  = base::apply(eta, 1, which.max)
+  output = array(0,c(n,p))
+  for (i in 1:n){
+    output[i,idmax[i]] = 1
+  }
+  return(output)
+}
+#' 6. version 'stochastic' 
+#' @keywords internal
+#' @noRd
+mixnorm.stochastic <- function(eta){
+  n = nrow(eta)
+  k = ncol(eta)
+  vec1k = (1:k)
+  output = array(0,c(n,k))
+  for (i in 1:n){
+    output[i,base::sample(vec1k, 1, prob=as.vector(eta[i,]))] = 1
   }
   return(output)
 }
