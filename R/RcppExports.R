@@ -21,6 +21,10 @@ cppdist_int_1toN <- function(x, Y) {
     .Call('_RiemSphere_cppdist_int_1toN', PACKAGE = 'RiemSphere', x, Y)
 }
 
+cppdist_ext_1toN <- function(x, Y) {
+    .Call('_RiemSphere_cppdist_ext_1toN', PACKAGE = 'RiemSphere', x, Y)
+}
+
 engine_wmean <- function(data, name, maxiter, eps, weights) {
     .Call('_RiemSphere_engine_wmean', PACKAGE = 'RiemSphere', data, name, maxiter, eps, weights)
 }
