@@ -8,5 +8,5 @@ License: GPL (>=3)
 Encoding: UTF-8
 Imports: Rcpp, Rdpack, RiemBase, RiemBaseExt, Bessel, DEoptim, DAS, Directional, cluster, stats, utils
 LinkingTo: Rcpp, RcppArmadillo, RiemBase
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.1
 RdMacros: Rdpack

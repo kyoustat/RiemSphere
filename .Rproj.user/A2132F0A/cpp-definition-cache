@@ -2,6 +2,66 @@
     {
         "definitions" : [
             {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+                "kind" : 6,
+                "line" : 20,
+                "name" : "cppdist_int_MtoN(arma::mat &, arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@cppdist_int_MtoN#&$@N@arma@C@Mat>#d#S0_#"
+            },
+            {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+                "kind" : 6,
+                "line" : 49,
+                "name" : "cppdist_ext_MtoN(arma::mat &, arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@cppdist_ext_MtoN#&$@N@arma@C@Mat>#d#S0_#"
+            },
+            {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+                "kind" : 6,
+                "line" : 74,
+                "name" : "cppdist_pair_int(arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@cppdist_pair_int#&$@N@arma@C@Mat>#d#"
+            },
+            {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+                "kind" : 6,
+                "line" : 103,
+                "name" : "cppdist_pair_ext(arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@cppdist_pair_ext#&$@N@arma@C@Mat>#d#"
+            },
+            {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+                "kind" : 6,
+                "line" : 129,
+                "name" : "cppdist_int_1toN(arma::vec, arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@cppdist_int_1toN#$@N@arma@C@Col>#d#&$@N@arma@C@Mat>#d#"
+            },
+            {
+                "column" : 11,
+                "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+                "kind" : 6,
+                "line" : 154,
+                "name" : "cppdist_ext_1toN(arma::vec, arma::mat &)",
+                "parent_name" : "",
+                "usr" : "c:@F@cppdist_ext_1toN#$@N@arma@C@Col>#d#&$@N@arma@C@Mat>#d#"
+            }
+        ],
+        "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_elementary.cpp",
+        "file_last_write" : 1574637620
+    },
+    {
+        "definitions" : [
+            {
                 "column" : 8,
                 "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
                 "kind" : 6,
@@ -39,7 +99,7 @@
             }
         ],
         "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_riemann.cpp",
-        "file_last_write" : 1562810075
+        "file_last_write" : 1574637620
     },
     {
         "definitions" : [
@@ -54,6 +114,6 @@
             }
         ],
         "file" : "/home/kisung/Desktop/RiemSphere/src/rcpp_rvmf.cpp",
-        "file_last_write" : 1560646768
+        "file_last_write" : 1574637620
     }
 ]
