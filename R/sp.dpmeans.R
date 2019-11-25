@@ -86,7 +86,7 @@ sp.dpmeans <- function(x, lambda=1, type=c("intrinsic","extrinsic"),
         labels[i] = k
         mu = rbind(mu, x[i,])
       } else {
-        labels[i] = which.min(dic)[1]
+        labels[i] = aux_whichmin(dic)
         # idmins = which(dic==min(dic))
         # if (length(idmins)>1){
         #   labels[i] = sample(idmins, 1)

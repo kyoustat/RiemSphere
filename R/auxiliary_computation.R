@@ -19,6 +19,8 @@
 # 14. aux_strcmp          : strcmp of MATLAB
 # 15. aux_vmf_ReML_kappa  : compute kappa given mu0 for vMF model 
 # 16. aux_besselI         : Song (2012)'s truncated power-series method
+# 17. aux_whichmax        : replicate 'which.is.max' function
+#     aux_whichmin        : replicate 'which.is.min' function
 
 
 # 01. aux_log -------------------------------------------------------------
@@ -138,9 +140,9 @@ aux_dist_MtoM <- function(mat){
 aux_assignment <- function(mat, max.type=TRUE){
   # for each row, use 'which.max' or 'which.max'
   if (isTRUE(max.type)){
-    label = as.vector(apply(mat, 1, which.max))  
+    label = as.vector(apply(mat, 1, aux_whichmax))  
   } else {
-    label = as.vector(apply(mat, 1, which.min))
+    label = as.vector(apply(mat, 1, aux_whichmin))
   } 
   return(label)
 }
@@ -250,10 +252,7 @@ aux_latent2hard <- function(xx){
   p = ncol(xx)
   output = array(0,c(n,p))
   for (i in 1:n){
-    ids = which.max(as.vector(xx[i,]))
-    if (length(ids)>1){
-      ids = sample(ids,1)
-    }
+    ids = aux_whichmax(as.vector(xx[i,]))
     output[i,ids] = 1
   }
   return(output)
@@ -410,4 +409,29 @@ aux_besselI <- function(x, s, log=TRUE){
     output = exp(output)
   }
   return(output)
+}
+
+
+# 17. aux_whichmax --------------------------------------------------------
+#' @keywords internal
+#' @noRd
+aux_whichmax <- function(vec){
+  mval = base::max(vec)
+  idlarge = which(vec>=mval)
+  if (length(idlarge)==1){
+    return(idlarge)
+  } else {
+    return(base::sample(idlarge, 1))
+  }
+}
+#' @keywords internal
+#' @noRd
+aux_whichmin <- function(vec){
+  mval = base::min(vec)
+  idlarge = which(vec<=mval)
+  if (length(idlarge)==1){
+    return(idlarge)
+  } else {
+    return(base::sample(idlarge, 1))
+  }
 }

@@ -1,13 +1,17 @@
 #' Mixture of Spherical Normal Distributions
 #' 
+#' max loglkd; min ICs
+#' 
 #' @examples 
 #' ## generate two-cluster data
 #' mymu1 = c(0,0,0,1)        # center of class 1
 #' mymu2 = c(-1,0,0,0)       # center of class 2
+#' mymu3 = c(0,1/sqrt(2),-1/sqrt(2),0) # class 3
 #' 
 #' x1 = rvmf(50, mymu1, kappa=10)
-#' x2 = rvmf(50, mymu2, kappa=10)
-#' xx = rbind(x1,x2)
+#' x2 = rvmf(50, mymu2, kappa=15)
+#' x3 = rvmf(50, mymu3, kappa=20)
+#' xx = rbind(x1,x2,x3)
 #' 
 #' ## apply clustering with different k values
 #' mix2 <- sp.mixnorm(xx, k=2)
@@ -16,15 +20,44 @@
 #' 
 #' ## compute 2-dimensional embedding for visualization
 #' mds2d <- sp.mds(xx, ndim=2)
-#' mdsx  <- mds2d$embed[,1]
-#' mdsy  <- mds2d$embed[,2]
+#' x  <- mds2d$embed[,1]
+#' y  <- mds2d$embed[,2]
 #' 
 #' ## compare via visualization
-#' opar  <- par(mfrow=c(1,3), pty="s")
-#' plot(mdsx, mdsy, col=mix2$cluster, main="k=2 mixture", pch=19)
-#' plot(mdsx, mdsy, col=mix3$cluster, main="k=3 mixture", pch=19)
-#' plot(mdsx, mdsy, col=mix4$cluster, main="k=4 mixture", pch=19)
+#' opar <- par(mfrow=c(1,3),pty="s")
+#' plot(x,y,col=mix2$cluster,main="k=2 mixture",pch=19)
+#' plot(x,y,col=mix3$cluster,main="k=2 mixture",pch=19)
+#' plot(x,y,col=mix4$cluster,main="k=2 mixture",pch=19)
 #' par(opar)
+#' 
+#' ## extra visualization
+#' \dontrun{
+#' # run more models
+#' mix5 <- sp.mixnorm(xx, k=5)
+#' mix6 <- sp.mixnorm(xx, k=6)
+#' mix7 <- sp.mixnorm(xx, k=7)
+#' mix8 <- sp.mixnorm(xx, k=8)
+#' 
+#' # information criteria
+#' xmat <- 2:8
+#' ymat <- rbind(mix2$criteria, mix3$criteria, mix4$criteria, mix5$criteria, 
+#'               mix6$criteria, mix7$criteria, mix8$criteria)
+#' colnames(ymat) = colnames(mix2$criteria)
+#' 
+#' # plot with x11()
+#' x11(width=12, height=6)
+#' par(mfrow=c(2,4), pty="s")
+#' plot(x, y, col=rainbow(8)[mix2$cluster], main="k=2 mixture", pch=19)
+#' plot(x, y, col=rainbow(8)[mix3$cluster], main="k=3 mixture", pch=19)
+#' plot(x, y, col=rainbow(8)[mix4$cluster], main="k=4 mixture", pch=19)
+#' plot(x, y, col=rainbow(8)[mix5$cluster], main="k=5 mixture", pch=19)
+#' plot(x, y, col=rainbow(8)[mix6$cluster], main="k=6 mixture", pch=19)
+#' plot(x, y, col=rainbow(8)[mix7$cluster], main="k=7 mixture", pch=19)
+#' plot(x, y, col=rainbow(8)[mix8$cluster], main="k=8 mixture", pch=19)
+#' matplot(xmat, ymat, type="b", lwd=2, main="Info. Criteria",
+#'         xlab="# clusters", col=1:4, lty=1:4, pch=1)
+#' legend("topright", legend = colnames(ymat), col = 1:4, lty=1:4, pch=1)
+#' } 
 #' 
 #' @export
 sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lambda=TRUE, 
@@ -109,7 +142,7 @@ sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lamb
   
   ###################################################################
   # Information Criterion
-  if (same.lambda){
+  if (!same.lambda){
     par.k = ((myp-1)*myk) + myk + (myk-1)  
   } else {
     par.k = ((myp-1)*myk) + 1   + (myk-1)  
@@ -126,7 +159,7 @@ sp.mixnorm <- function(x, k=2, init=c("kmeans","random"), maxiter=496, same.lamb
   ###################################################################
   # Return
   output = list()
-  output$cluster  = base::apply(par.eta, 1, which.max)
+  output$cluster  = base::apply(par.eta, 1, aux_whichmax)
   output$loglkd   = loglkd.old  # max loglkd
   output$criteria = infov       # min AIC/AICc/BIC/HQIC
   output$parameters = list(pro=par.pi, centers=par.mu, concentration=par.lambda)
@@ -209,11 +242,11 @@ mixnorm.loglkd <- function(x, par.mu, par.lambda, par.pi){
   kk = length(par.pi)
   nn = nrow(x)
   
-  output = 0
+  evals = array(0,c(nn,kk))
   for (k in 1:kk){
-    output = output + sum(as.vector(dspnorm(x, as.vector(par.mu[k,]), lambda=par.lambda[k], log = TRUE)))
+    evals[,k] = as.vector(dspnorm(x, as.vector(par.mu[k,]), par.lambda[k], log = FALSE))*par.pi[k]
   }
-  return(output)
+  return(base::sum(base::log(base::rowSums(evals)))) # following my current note, works fine !
 }
 #' 5. version 'hard' 
 #' @keywords internal
@@ -221,7 +254,7 @@ mixnorm.loglkd <- function(x, par.mu, par.lambda, par.pi){
 mixnorm.hard <- function(eta){
   n = nrow(eta)
   p = ncol(eta)
-  idmax  = base::apply(eta, 1, which.max)
+  idmax  = base::apply(eta, 1, aux_whichmax)
   output = array(0,c(n,p))
   for (i in 1:n){
     output[i,idmax[i]] = 1
@@ -241,3 +274,27 @@ mixnorm.stochastic <- function(eta){
   }
   return(output)
 }
+
+
+
+# rm(list=ls())
+# library(RiemSphere)
+# data("spdat.orbital")
+# 
+# dmat = sp.pdist(spdat.orbital)
+# mds2 = DAS::cmds(dmat)$embed
+# x = as.vector(mds2[,1])
+# y = as.vector(mds2[,2])
+# 
+# c2 = sp.kmeans(spdat.orbital, k=2)
+# c3 = sp.kmeans(spdat.orbital, k=3)
+# c4 = sp.kmeans(spdat.orbital, k=4)
+# c5 = sp.kmeans(spdat.orbital, k=5)
+# 
+# graphics.off()
+# x11()
+# par(mfrow=c(2,2),pty="s")
+# plot(x,y,col=c2$cluster,pch=19,main="k=2")
+# plot(x,y,col=c3$cluster,pch=19,main="k=3")
+# plot(x,y,col=c4$cluster,pch=19,main="k=4")
+# plot(x,y,col=c5$cluster,pch=19,main="k=5")
