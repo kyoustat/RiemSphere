@@ -4,9 +4,9 @@ Title: What the package doesas
 Version: 0.1.0
 Authors@R: c(person("Kisung", "You", role = c("aut", "cre"), email = "kyoustat@gmail.com",comment=c(ORCID="0000-0002-8584-459X")))
 Description: More about what it doesas
-License: GPL (>=3)
+License: MIT + file LICENSE
 Encoding: UTF-8
-Imports: Rcpp, Rdpack, RiemBase, RiemBaseExt, Bessel, DEoptim, DAS, Directional, cluster, stats, utils
-LinkingTo: Rcpp, RcppArmadillo, RiemBase
-RoxygenNote: 7.0.1
+Imports: Rcpp, Rdpack, RiemBase, RiemBaseExt, Bessel, DEoptim, Directional, cluster, maotai, stats, utils
+LinkingTo: Rcpp, RcppArmadillo, RiemBase, maotai
+RoxygenNote: 7.1.0
 RdMacros: Rdpack

@@ -26,10 +26,10 @@ x2 = rvmf(50, mymu2, kappa=10)
 xx = rbind(x1,x2)
 
 ## apply clustering with different threshold values
-case1 <- sp.dpmeans(xx, lambda=0.5)
-case2 <- sp.dpmeans(xx, lambda=1.0)
-case3 <- sp.dpmeans(xx, lambda=1.5)
-case4 <- sp.dpmeans(xx, lambda=2.0)
+case1 <- sp.dpmeans(xx, lambda=0.50)
+case2 <- sp.dpmeans(xx, lambda=0.75)
+case3 <- sp.dpmeans(xx, lambda=1.0)
+case4 <- sp.dpmeans(xx, lambda=1.25)
 
 ## compute 2-dimensional embedding for visualization
 mds2d <- sp.mds(xx, ndim=2)

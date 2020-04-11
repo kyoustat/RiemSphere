@@ -10,14 +10,13 @@
 #' @name RiemSphere
 #' @import RiemBase
 #' @import Rdpack
-#' @importFrom DAS cmds
 #' @importFrom RiemBaseExt rclust.kmedoids rclust.hclust rclust.dbscan
 #' @importFrom Directional mix.vmf
 #' @importFrom cluster pam
 #' @importFrom Bessel besselI.nuAsym besselIasym
 #' @importFrom DEoptim DEoptim DEoptim.control
-#' @importFrom stats integrate optimize uniroot runif rnorm kmeans as.dist pchisq dist
-#' @importFrom utils packageVersion
+#' @importFrom stats integrate optimize uniroot runif rnorm kmeans as.dist pchisq dist cmdscale
+#' @importFrom utils packageVersion getFromNamespace
 #' @importFrom Rcpp evalCpp
 #' @useDynLib RiemSphere
 NULL

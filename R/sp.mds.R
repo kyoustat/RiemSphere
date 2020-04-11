@@ -28,9 +28,9 @@ sp.mds <- function(x, ndim=2, type=c("intrinsic","extrinsic")){
   mytype = match.arg(type)
   
   ############################################################
-  # Compute Pairwise distance and Use DAS package
+  # Compute Pairwise distance and Stats package temporarily
   dmat   = sp.pdist.internal(x, type=mytype, as.dist=TRUE)
-  output = DAS::cmds(dmat, ndim=myndim)
+  output = stats::cmdscale(dmat, k=myndim)
   
   ############################################################
   # Return

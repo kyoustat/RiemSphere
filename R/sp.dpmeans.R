@@ -11,10 +11,10 @@
 #' xx = rbind(x1,x2)
 #' 
 #' ## apply clustering with different threshold values
-#' case1 <- sp.dpmeans(xx, lambda=0.5)
-#' case2 <- sp.dpmeans(xx, lambda=1.0)
-#' case3 <- sp.dpmeans(xx, lambda=1.5)
-#' case4 <- sp.dpmeans(xx, lambda=2.0)
+#' case1 <- sp.dpmeans(xx, lambda=0.50)
+#' case2 <- sp.dpmeans(xx, lambda=0.75)
+#' case3 <- sp.dpmeans(xx, lambda=1.0)
+#' case4 <- sp.dpmeans(xx, lambda=1.25)
 #' 
 #' ## compute 2-dimensional embedding for visualization
 #' mds2d <- sp.mds(xx, ndim=2)
@@ -38,7 +38,11 @@ sp.dpmeans <- function(x, lambda=1, type=c("intrinsic","extrinsic"),
     stop("* sp.dpmeans : an input 'x' is not a row-stacked matrix of unit-norm vectors.")
   }
   myn     = nrow(x)   # number of observations
-  mytype  = match.arg(type)
+  if (missing(type)){
+    mytype = "intrinsic"
+  } else {
+    mytype  = match.arg(type)  
+  }
   maxiter = round(maxiter)
 
   ############################################################

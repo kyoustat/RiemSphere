@@ -4,7 +4,9 @@
 \name{spdat.orbital}
 \alias{spdat.orbital}
 \title{Normal Vectors to the Orbital Planes of the 9 Planets}
-\format{matrix of size \eqn{(9\times 3)}}
+\format{
+matrix of size \eqn{(9\times 3)}
+}
 \source{
 \href{http://sipi.usc.edu/database/?volume=misc}{USC SIPI Image Database}
 }
